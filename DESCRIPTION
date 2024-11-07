@@ -1,0 +1,20 @@
+Package: HoloSimR
+Type: Package
+Title: Simulating a Selection Process under the Hologenome Scenario
+Version: 0.1.0
+Author: Cristina Casto-Rebollo [aut, cre], Ivan Porcnic [ctb], Gregor Gorjanc [ctb], Noelia Ibáñez-Escriche [ctb] 
+Maintainer: Cristina Casto-Rebollo <3ccasto@gmail.com>
+Description: This simulator develops a selection process that simulates the co-evolution of the host genome and the microbiota. Allowed species are rabbit, cattle and a GENERIC genome. The user can include their own demographic population history using the AlphaSimR package. Microbiota are modeled considering the host genetic effect (microbial heritability), the symbiosis (microbial species interaction) and the environment.
+License: MIT + file LICENSE
+Encoding: UTF-8
+LazyData: true
+RoxygenNote: 7.3.2
+Depends:
+	AlphaSimR,
+	MASS,
+	dplyr,
+	utils,
+	mobsim,
+	R6,
+	stats,
+	ggplot2
