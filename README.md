@@ -3,10 +3,12 @@ HoloSimR provides a valuable research platform, allowing researchers to test hyp
 
 ## Instalation
 Instalation of required package:
+
 install.packages("devtools")
 
-Instalation of HoloSimR
+Instalation of HoloSimR:
+
 devtools::install_github("Casto-Rebollo/HoloSimR")
 
-# Citation
+## Citation
 Cristina Casto-Rebollo, Ivan Pocrnic, Gregor Gorjanc et al. HoloSimR: a comprehensive framework for simulating breeding programs including the hologenome scenario, 08 November 2024, PREPRINT (Version 1) available at Research Square [https://doi.org/10.21203/rs.3.rs-5409986/v1]
