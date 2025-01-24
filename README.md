@@ -1,8 +1,8 @@
-<p align="right">
+
+# HoloSimR <p align="right">
   <img src="HSR_logo.png" width="100" height="100" alt="Top Right Image">
 </p>
 
-# HoloSimR
 HoloSimR provides a valuable research platform, allowing researchers to test hypotheses and develop new approaches in a controlled in silico environment before applying them to real-world breeding programmes. This ultimately advances our understanding of host-microbiota interactions in the context of animal breeding.
 
 ## Instalation
