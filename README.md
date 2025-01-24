@@ -1,4 +1,4 @@
-<img src="HSR_logo.png" alt="HoloSimR Logo" align="right" width="100" height="100">
+<img src="HSR_logo.png" alt="HoloSimR Logo" align="right" width="75" height="75">
 
 
 
