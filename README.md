@@ -1,5 +1,5 @@
 <p align="right">
-  <img src="image.jpg" width="100" height="100" alt="Top Right Image">
+  <img src="HSR_logo.png" width="100" height="100" alt="Top Right Image">
 </p>
 
 # HoloSimR
