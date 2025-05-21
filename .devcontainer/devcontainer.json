@@ -1,10 +1,6 @@
 {
     "name": "R Data Science Codespace",
     "image": "mcr.microsoft.com/devcontainers/universal:latest",
-    "features": {
-        "ghcr.io/devcontainers/features/r:1": {}
-        // You can specify an R version if you want, e.g., "ghcr.io/devcontainers/features/r:1": { "version": "4.3.2" }
-    },
     "customizations": {
         "vscode": {
             "extensions": [
@@ -12,5 +8,11 @@
             ]
         }
     },
-    "postCreateCommand": "R -e 'install.packages(\"languageserver\", repos = \"https://cran.rstudio.com\")'; R -e 'install.packages(\"httpgd\", repos = \"https://cran.rstudio.com\")'"
+    "postCreateCommand": [
+        "sudo apt-get update",
+        "sudo apt-get install -y --no-install-recommends r-base r-base-dev",
+        "R -e 'install.packages(\"languageserver\", repos = \"https://cran.rstudio.com\")'",
+        "R -e 'install.packages(\"httpgd\", repos = \"https://cran.rstudio.com\")'"
+    ],
+    "remoteUser": "root"
 }
