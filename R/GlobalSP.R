@@ -9,7 +9,7 @@
 #' Number of individuals in the founder population.
 #' 
 #' @field dataM (TXT file)
-#' Real microbiota data (count data). Indicate the complete path if the file is not in the working directory
+#' Real microbiota data (count data). TXT file separated by tabulations. Indicate the complete path if the file is not in the working directory
 #'
 #' @field nChr (numeric)
 #' Total number of chromosomes to simulate using \code{runcMacs} from \code{\link{AlphaSimR}}.
