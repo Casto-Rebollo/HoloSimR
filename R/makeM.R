@@ -145,7 +145,22 @@ makeM <- function(pop,sym = 0,
     mbiome <- matrix((geno.biome + mbiome_VE),
                      nrow = nInd(pop), ncol = nrow(founderM))
 
-    mbiomeMxM <- mbiome %*% as.matrix(baseMxM.scaled)
+    # Implement multivariate gamma with copula
+    gauss_cop <- normalCopula(param = P2p(founderMxM), 
+                              dim = globalSP$nSpecies, dispstr = "un")
+
+    # Generate correlated uniforms via Gaussian copula
+    set.seed(rndSeed)
+    u <- copula::rCopula(nInd(pop), gauss_cop)
+
+    mbiomeMxM <- NULL
+    for(i in 1:globalSP$nSpecies){
+      mbiomeMxM <- cbind(mbiomeMxM,
+        qgamma(u[,i], shape=0.2, rate=0.5)
+      )
+    }
+
+    mbiomeMxM <- mbiomeMxM %*% as.matrix(baseMxM.scaled)
     mbiome <- matrix(round(acquiredSp *(mbiome + mbiomeMxM), 0),
                      nrow = nInd(pop), ncol = nrow(founderM))
   }else{

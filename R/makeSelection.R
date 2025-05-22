@@ -115,7 +115,7 @@ makeSelection <- function(g = NULL, model = NULL, selType = NULL, sym = NULL,
   nson <- globalSP$nSon
 
   if(length(model) == 1){
-    if(model == "All"){
+    if(model == "All" && is.null(globalSP$MH.H)){
       model = c("G",
                 "M",
                 "NMH",
@@ -123,8 +123,13 @@ makeSelection <- function(g = NULL, model = NULL, selType = NULL, sym = NULL,
                 "MMH",
                 "HMH")
     }
+    if(model == "All" && !is.null(globalSP$MH.H)){
+      model = c("G",
+                "M",
+                "NMH",
+                "H")
+    }
   }
-
 
 
   # Initialize time tracking
