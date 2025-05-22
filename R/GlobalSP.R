@@ -200,7 +200,7 @@ GlobalSP <- R6Class(
     MH.low = 0.1,
     MH.medium = 0.3,
     MH.high = 0.6,
-    MH.M = NULL,
+    MH.H = NULL,
     meanMH = NULL,
     varMH = NULL,
 
