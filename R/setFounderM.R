@@ -96,24 +96,40 @@ setFounderM <- function(globalSP = NULL){
   ######################
 
   # QTL effect (host genotype) on microbiota (Microbial heritability)
-  MH.w <- round(globalSP$nSpEff * globalSP$propMH.wSp)
-  MH.all <- round(globalSP$nSpecies * globalSP$propMH)
+  if("H" %in% globalSP$model || globalSP$model == "All"){
+    if(globalSP$MH.H == NULL){
 
-  if(MH.all < MH.w){
-    MH.w <- MH.all * globalSP$propMH.wSp
+      common_factor <- (globalSP$meanMH * (1 - globalSP$meanMH) / globalSP$varMH) - 1
+      alpha <- globalSP$meanMH * common_factor
+      beta <- (1 - globalSP$meanMH) * common_factor
+
+      globalSP$MH.H <- rbeta(globalSP$nSpecies, alpha, beta)
+
+    }
+    MH.nSp_index <- which(globalSP$MH.H != 0)
+
+  }else{
+    MH.w <- round(globalSP$nSpEff * globalSP$propMH.wSp)
+    MH.all <- round(globalSP$nSpecies * globalSP$propMH)
+
+    if(MH.all < MH.w){
+     MH.w <- MH.all * globalSP$propMH.wSp
+    }
+
+    MH.wSp_index <- sample(which(founderM$w != 0), MH.w) #MH of species with w
+    founderM$beta <- 0
+    founderM$beta[MH.wSp_index] <- 1
+
+    MH.nSp <- MH.all - MH.w #Rest of MH species
+
+    MH_index <- sample(which(founderM$beta == 0 ), MH.nSp)
+    founderM$beta[MH_index] <- 1
+
+    # All species with microbial heritability
+    MH.nSp_index <- which(founderM$beta == 1)
   }
 
-  MH.wSp_index <- sample(which(founderM$w != 0), MH.w) #MH of species with w
-  founderM$beta <- 0
-  founderM$beta[MH.wSp_index] <- 1
 
-  MH.nSp <- MH.all - MH.w #Rest of MH species
-
-  MH_index <- sample(which(founderM$beta == 0 ), MH.nSp)
-  founderM$beta[MH_index] <- 1
-
-  # All species with microbial heritability
-  MH.nSp_index <- which(founderM$beta == 1)
 
   # Pre-allocate beta matrix
   beta <- matrix(0, nrow = globalSP$nChr * globalSP$nQTLchr, ncol = globalSP$nSpecies)

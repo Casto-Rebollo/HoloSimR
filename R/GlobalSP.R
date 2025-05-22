@@ -7,6 +7,9 @@
 #'
 #' @field nPop (numeric)
 #' Number of individuals in the founder population.
+#' 
+#' @field dataM (TXT file)
+#' Real microbiota data (count data). Indicate the complete path if the file is not in the working directory
 #'
 #' @field nChr (numeric)
 #' Total number of chromosomes to simulate using \code{runcMacs} from \code{\link{AlphaSimR}}.
@@ -33,7 +36,7 @@
 #' Selection type (e.g., \dQuote{Divergent}, \dQuote{Low}, \dQuote{High}).
 #'
 #' @field model (character)
-#' Simulation model. There are five models implemented:
+#' Simulation model. There are six models implemented:
 #' \itemize{
 #'  \item \dQuote{G}: Effect of the genome only
 #'  \item \dQuote{M}: Effect of microbiota only
@@ -41,6 +44,7 @@
 #'  \item \dQuote{LMH}: Hologenome considering Low Microbial Heritability
 #'  \item \dQuote{MHM}: Hologenome considering Medium Microbial Heritability
 #'  \item \dQuote{HMH}: Hologenome considering High Microbial Heritability
+#'  \item \dQuote{H}: Hologenome considering variability of Microbial heritability
 #' }
 #' All models can run simultaneously starting from the same base population if \dQuote{All} is specified.
 #'
@@ -110,6 +114,15 @@
 #' @field MH.high (numeric)
 #' Microbial heritability in the HMH scenario.
 #'
+#' @field MH.H (numeric vector)
+#' Vector of variable microbial heritability
+#'
+#' @field meanMH (numeric)
+#' Mean of microbial heritability distribution
+#'
+#' @field varMH (numeric)
+#' Variance of microbial heritability
+#'
 #' @field symbiosis (numeric)
 #' Value or vector to specify whether to simulate (1) or not (0) the microbial species interaction or symbiosis effect on microbial abundance.
 #' There are five types of interactions simulated according to \cite{Coyte KZ and Rakoff-Nahoum S (2019)}: Commensalism, Mutualism, Ammensalism, Competition, and Exploitation/Pathogen.
@@ -149,6 +162,7 @@ GlobalSP <- R6Class(
 
     # General parameters
     nPop = NULL,
+    dataM = NULL,
     nChr = 1,
     nQTLchr = NULL,
     segSITESchr = NULL,
@@ -186,11 +200,15 @@ GlobalSP <- R6Class(
     MH.low = 0.1,
     MH.medium = 0.3,
     MH.high = 0.6,
+    MH.M = NULL,
+    meanMH = NULL,
+    varMH = NULL
 
     #' @description
     #' Function to initialize the parameters needed for the simulation.
     #' Saving this object as \var{gSP} will facilitate the functionality of the other functions.
     #' @param nPop The total number of individuals to simulate in the founder population.
+    #' @param dataM Path to TXT file format of microbiota composition (count data).
     #' @param nChr The total number of chromosomes to simulate using \code{runcMacs} from \code{\link{AlphaSimR}}. \emph{Default} is 1.
     #' @param nQTLchr A value or vector indicating the number of QTL per chromosome affecting the simulated trait.
     #' @param segSITESchr The total number of segregating sites per chromosome to simulate using \code{runcMacs} from \code{\link{AlphaSimR}}.
@@ -203,9 +221,11 @@ GlobalSP <- R6Class(
     #' There are five models implemented: \dQuote{G}, \dQuote{M}, \dQuote{NMH}, \dQuote{LMH}, \dQuote{MHM}, and \dQuote{HMH}.
     #' @param nt If OpenMP is available, this allows for simulating chromosomes in parallel. \emph{Default} is 1.
     #' @param nSim The number of repetitions of the simulation. \emph{Default} is 1.
-    initialize = function(nPop, nChr = 1, nQTLchr, segSITESchr = NULL, animal = "GENERIC", nSire = 25, nDam = 125,
+    initialize = function(nPop, dataM = NULL, nChr = 1, nQTLchr, segSITESchr = NULL, # nolint
+                          animal = "GENERIC", nSire = 25, nDam = 125,
                           nCross = 5, selType = "Divergent", nyear, model = "NMH", nt = 1, nSim = 1) {
       self$nPop <- nPop
+      self$dataM <- dataM
       self$nChr <- nChr
       self$nQTLchr <- nQTLchr
       self$segSITESchr <- segSITESchr
@@ -252,10 +272,14 @@ GlobalSP <- R6Class(
     #' @param MH.low Microbial heritability in the LMH scenario.
     #' @param MH.medium Microbial heritability in the MHM scenario.
     #' @param MH.high Microbial heritability in the HMH scenario.
+    #' @param MH.H Vector of microbial heritability in H scenario.
+    #' @param meanMH Mean of microbial heritability in H scenario.
+    #' @param varM Variance of microbial heritability in H scenario.
     setSpecies = function(nSpecies, nSp0, nSpEff, PM = 0.5, EM = 0.5, propMH = 0.1,
                           propQTL = 0.1, propMH.wSp = 0.5, symbiosis = c(0, 1),
                           s2 = 0.2, MH.G = 0.2, MH.M = 0.2,
-                          MH.low = 0.1, MH.medium = 0.3, MH.high = 0.6) {
+                          MH.low = 0.1, MH.medium = 0.3, MH.high = 0.6,
+                          MH.H = NULL, meanMH = NULL, varMH = NULL) {
       self$nSpecies <- nSpecies
       self$nSp0 <- nSp0
       self$nSpEff <- nSpEff
@@ -271,6 +295,9 @@ GlobalSP <- R6Class(
       self$MH.low <- MH.low
       self$MH.medium <- MH.medium
       self$MH.high <- MH.high
+      self$MH.H <- MH.high
+      self$meanMH <- meanMH
+      selfvarMH <- varMH
 
       invisible(self)
     },
@@ -280,6 +307,7 @@ GlobalSP <- R6Class(
     getValues = function() {
       print(list(
         nPop = self$nPop,
+        dataM = self$dataM,
         nChr = self$nChr,
         nQTLchr = self$nQTLchr,
         segSITESchr = self$segSITESchr,
@@ -311,7 +339,10 @@ GlobalSP <- R6Class(
         MH.M = self$MH.M,
         MH.low = self$MH.low,
         MH.medium = self$MH.medium,
-        MH.high = self$MH.high
+        MH.high = self$MH.high,
+        MH.H = self$MH.H,
+        meanMH = self$meanMH,
+        varMH = self$varMH
       ))
     },
 
