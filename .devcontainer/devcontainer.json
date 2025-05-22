@@ -1,18 +1,18 @@
 {
-    "name": "R Data Science Codespace",
-    "image": "mcr.microsoft.com/devcontainers/universal:latest",
-    "customizations": {
-        "vscode": {
-            "extensions": [
-                "REditorSupport.r"
-            ]
-        }
-    },
-    "postCreateCommand": [
-        "sudo apt-get update",
-        "sudo apt-get install -y --no-install-recommends r-base r-base-dev",
-        "R -e 'install.packages(\"languageserver\", repos = \"https://cran.rstudio.com\")'",
-        "R -e 'install.packages(\"httpgd\", repos = \"https://cran.rstudio.com\")'"
-    ],
-    "remoteUser": "root"
+  "name": "R Dev Container",
+  "image": "rocker/rstudio:latest",
+  "features": {
+    "ghcr.io/devcontainers/features/git:1": {},
+    "ghcr.io/devcontainers/features/common-utils:2": {}
+  },
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "REditorSupport.r",
+        "Ikuyadeu.r",
+        "reditorsupport.r-lsp"
+      ]
+    }
+  },
+  "remoteUser": "rstudio"
 }
