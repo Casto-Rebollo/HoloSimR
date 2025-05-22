@@ -49,6 +49,7 @@ setFounderM <- function(globalSP = NULL){
   if(!is.null(globalSP$dataM)){
     data <- read.table(globalSP$dataM, stringsAsFactors = F, header = T, sep="\t")
     globalSP$nSpecies <<- ncol(data)
+    globalSP$symbiosis <<- 1
   }
   simEM <- sim_sad(s_pool = globalSP$nSpecies, # nolint
                    n_sim = globalSP$getPrivate()$bioLimit,
@@ -59,7 +60,7 @@ setFounderM <- function(globalSP = NULL){
   )
 
   if(is.null(globalSP$dataM)){
-    globalSP$nSpecies <- length(simEM)
+    globalSP$nSpecies <<- length(simEM)
   }
   
   # Stable parameters of simulate species at founder population
