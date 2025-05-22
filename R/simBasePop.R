@@ -23,6 +23,7 @@
 #'
 #' @export
 #' @importFrom stats var
+#' @import copula
 #' @usage
 #' simBasePop(model,
 #'            founderPop = NULL,
@@ -119,7 +120,8 @@ simBasePop <- function(model, founderPop = NULL,
     NMH = 0,
     LMH = globalSP$MH.low,
     MMH = globalSP$MH.medium,
-    HMH = globalSP$MH.high
+    HMH = globalSP$MH.high,
+    H = globalSP$MH.H
   )
 
   varG.sp <- (founderM$SD^2) * h
@@ -185,16 +187,27 @@ simBasePop <- function(model, founderPop = NULL,
                      nrow = nInd(pop), ncol = length(founderM$w),
                      dimnames = list(NULL, founderM$Species))
 
-    mbiome_sym[mbiome_sym < 0] <- 0
+    # Implement multivariate gamma with copula
+    gauss_cop <- normalCopula(param = P2p(founderMxM), 
+                              dim = globalSP$nSpecies, dispstr = "un")
 
-    scaleMxM <- mbiome_sym %*% as.matrix(founderMxM)
-    varMxM <- apply(scaleMxM, 2, var)
-    baseMxM.scaled <- founderMxM
+    # Generate correlated uniforms via Gaussian copula
+    set.seed(rndSeed)
+    u <- copula::rCopula(nInd(pop), gauss_cop)
 
-    baseMxM.scaled <- t(apply(founderMxM, 1,
-                              function(x) x * sqrt(varI.sp / varMxM)))
+    mbiome.sym <- NULL
+    for(i in 1:globalSP$nSpecies){
+      mbiome.sym <- cbind(mbiome.sym,
+        qgamma(u[,i], shape=0.2, rate=0.5)
+      )
+    }
+    
+    varMxM <- apply(mbiome.sym, 2, var)
+    
+    baseMxM.scaled <- apply(mbiome.sym, 2,
+                            function(x) x * sqrt(varI.sp / varMxM))
 
-    mbiome.sym <- mbiome_sym %*% as.matrix(baseMxM.scaled)
+    mbiome.sym <- mbiome.sym%*%baseMxM.scaled            
 
     #Scale microbiota with symbiosis
     mbiome_sym <- matrix((mbiome_sym + mbiome.sym),
