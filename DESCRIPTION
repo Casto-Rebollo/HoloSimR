@@ -17,4 +17,5 @@ Depends:
 	mobsim,
 	R6,
 	stats,
-	ggplot2
+	ggplot2,
+	copula

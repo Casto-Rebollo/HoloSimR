@@ -202,7 +202,7 @@ GlobalSP <- R6Class(
     MH.high = 0.6,
     MH.M = NULL,
     meanMH = NULL,
-    varMH = NULL
+    varMH = NULL,
 
     #' @description
     #' Function to initialize the parameters needed for the simulation.
@@ -221,9 +221,9 @@ GlobalSP <- R6Class(
     #' There are five models implemented: \dQuote{G}, \dQuote{M}, \dQuote{NMH}, \dQuote{LMH}, \dQuote{MHM}, and \dQuote{HMH}.
     #' @param nt If OpenMP is available, this allows for simulating chromosomes in parallel. \emph{Default} is 1.
     #' @param nSim The number of repetitions of the simulation. \emph{Default} is 1.
-    initialize = function(nPop, dataM = NULL, nChr = 1, nQTLchr, segSITESchr = NULL, # nolint
+    initialize = function(nPop, dataM = NULL, nChr = 1, nQTLchr, segSITESchr = NULL,
                           animal = "GENERIC", nSire = 25, nDam = 125,
-                          nCross = 5, selType = "Divergent", nyear, model = "NMH", nt = 1, nSim = 1) {
+                          nCross = 5, selType = "Divergent", nyear, model = "NMH", nt = 1, nSim = 1){
       self$nPop <- nPop
       self$dataM <- dataM
       self$nChr <- nChr

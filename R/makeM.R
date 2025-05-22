@@ -12,6 +12,7 @@
 #' @return A \code{\link{MapPop-class}} object that includes microbiota abundance information (M) and the microbiota value (mv) for each individual, according to \code{\link{fillSp}}.
 #' @export
 #' @import MASS
+#' @import copula
 #' @details
 #' The microbiota abundance is computed considering that the variability of each microbial species is due to:
 #' \eqn{\text{var}_{\text{m}_{\text{k}}} = \text{var}_{\text{hg}_{\text{k}}} + \text{var}_{\text{s}_{\text{k}}} + \text{var}_{\text{e}_{\text{k}}}},
