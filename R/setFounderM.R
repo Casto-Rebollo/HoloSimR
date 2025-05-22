@@ -48,7 +48,7 @@ setFounderM <- function(globalSP = NULL){
 
   if(!is.null(globalSP$dataM)){
     data <- read.table(globalSP$dataM, stringsAsFactors = F, header = T, sep="\t")
-    globalSP$nSpecies <- ncol(data)
+    globalSP$nSpecies <<- ncol(data)
   }
   simEM <- sim_sad(s_pool = globalSP$nSpecies, # nolint
                    n_sim = globalSP$getPrivate()$bioLimit,
@@ -120,7 +120,8 @@ setFounderM <- function(globalSP = NULL){
       alpha <- globalSP$meanMH * common_factor
       beta <- (1 - globalSP$meanMH) * common_factor
 
-      globalSP$MH.H <- rbeta(globalSP$nSpecies, alpha, beta)
+      globalSP$MH.H <<- rbeta(globalSP$nSpecies, alpha, beta)
+      globalSP$MH.M <<- globalSP$MH.H
 
     }
     MH.nSp_index <- which(globalSP$MH.H != 0)
@@ -130,7 +131,7 @@ setFounderM <- function(globalSP = NULL){
     MH.all <- round(globalSP$nSpecies * globalSP$propMH)
 
     if(MH.all < MH.w){
-     MH.w <- MH.all * globalSP$propMH.wSp
+      MH.w <- MH.all * globalSP$propMH.wSp
     }
 
     MH.wSp_index <- sample(which(founderM$w != 0), MH.w) #MH of species with w
