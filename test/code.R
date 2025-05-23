@@ -9,3 +9,4 @@ gSP$dataM <- "data/example.txt"
 ##Founder population 
 founderG = setFounderG(globalSP=gSP)
 founderM = setFounderM(globalSP=gSP)
+

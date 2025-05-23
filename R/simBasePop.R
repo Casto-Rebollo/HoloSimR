@@ -175,10 +175,20 @@ simBasePop <- function(model, founderPop = NULL,
   if(1%in%globalSP$symbiosis){
     #Scale the interaction matrix according to the base population microbiota abundance
     if((globalSP$s2+h) >1){
-      stop("Please check the values for s2 and h2. The must sum 1 as maximun")
+      if(is.null(globalSP$MH.H)){
+        stop("Please check the values for s2 and h2. The must sum 1 as maximun")
+      }
+      if(!is.null(globalSP$MH.H)){
+        stop("Please check the values for s2. Remember that simulating H scenario, s is a proportion of VE")
+      }
+      
     }
-    varI.sp <- (founderM$SD^2) * globalSP$s2
-    varE_sym.sp <- (founderM$SD^2) - varI.sp - varG.sp
+
+    if(!is.null(globalSP$MH.H)){
+      varI.sp <- varE.sp * globalSP$s2
+      varE_sym.sp <- varE.sp - varI.sp
+    }
+    
 
     set.seed(rndSeed)
     mbiome_VE <- mvrnorm(nInd(pop),mu = as.vector(founderM$GR_PM), Sigma = diag(c(varE_sym.sp)))
