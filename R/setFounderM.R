@@ -94,21 +94,18 @@ setFounderM <- function(globalSP = NULL){
 
     ###################################################################
     founderM$PM <- sample(simEM) #Mean of species abundance in the parental microbiome
-    founderM$GR_PM <- founderM$PM/log2(founderM$PM)
-
-    founderM$SD <- round(sample(runif(globalSP$nSpecies, 0,2)) * founderM$GR_PM,2) #Standard deviation of species abundance
+    founderM$SD <- round(sample(runif(globalSP$nSpecies, 0,2)) * founderM$PM,2) #Standard deviation of species abundance
 
     founderM$RA_PM0[founderM$PM0 == 1] <- founderM$PM[founderM$PM0 == 1] / sum(founderM$PM[founderM$PM0 == 1])
     founderM$RA_PM0[is.na(founderM$RA_PM0)] <- 0
+  
   }else{
     founderM$PM0 <- 1
     founderM$PM <- colMeans(data)
     founderM$RA_PM0 <- founderM$PM/sum(founderM$PM)
-    founderM$GR_PM <- founderM$PM/apply(log2(data+1),2,mean)
-    founderM$SD <- apply(log2(data+1),2,sd)
+    founderM$SD <- apply(data,2,sd)
   }
   
-
   #################################
   # Simulation of species effects #
   #################################
