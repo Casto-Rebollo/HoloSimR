@@ -221,9 +221,13 @@ GlobalSP <- R6Class(
     #' There are five models implemented: \dQuote{G}, \dQuote{M}, \dQuote{NMH}, \dQuote{LMH}, \dQuote{MHM}, and \dQuote{HMH}.
     #' @param nt If OpenMP is available, this allows for simulating chromosomes in parallel. \emph{Default} is 1.
     #' @param nSim The number of repetitions of the simulation. \emph{Default} is 1.
+    #' @param nSire Number of breeding sires. \emph{Default} is 25.
+    #' @param nDam Number of breeding dam. \emph{Default} is 125. 
+    #' @param nCross Number of crosses per sire. \emph{Default} in \var{NULL}. If it is \var{NULL}, it will directly computed. 
+    #' @param nSon Number of progeny per cross. \emph{Default} is 8.
     initialize = function(nPop, dataM = NULL, nChr = 1, nQTLchr, segSITESchr = NULL,
                           animal = "GENERIC", nSire = 25, nDam = 125,
-                          nCross = 5, selType = "Divergent", nyear, model = "NMH", nt = 1, nSim = 1){
+                          nCross = NULL, selType = "Divergent", nyear, model = "NMH", nt = 1, nSim = 1){
       self$nPop <- nPop
       self$dataM <- dataM
       self$nChr <- nChr

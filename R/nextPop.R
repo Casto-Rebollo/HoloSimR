@@ -100,6 +100,10 @@ nextPop <- function(pop, crossPlan,
       nSon = round(max(matePlan$Sel_value,na.rm = T))
     }
 
+    if(is.null(globalSP$nCross)){
+      globalSP$nCross <<- globalSP$nDam/globalSP$nSire
+    }
+
     Pop <- makeCross(Poptmp, as.matrix(matePlan[,1:2]), nProgeny = nSon)
 
     ##Adapt population for litter size
