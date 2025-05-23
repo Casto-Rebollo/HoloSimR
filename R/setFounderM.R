@@ -128,7 +128,7 @@ setFounderM <- function(globalSP = NULL){
 
   # QTL effect (host genotype) on microbiota (Microbial heritability)
   if("H" %in% globalSP$model || globalSP$model == "All"){
-    if(globalSP$MH.H == NULL){
+    if(is.null(globalSP$MH.H)){
 
       common_factor <- (globalSP$meanMH * (1 - globalSP$meanMH) / globalSP$varMH) - 1
       alpha <- globalSP$meanMH * common_factor
