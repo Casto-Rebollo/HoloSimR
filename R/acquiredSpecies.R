@@ -80,8 +80,8 @@ acquiredSpecies <- function(pop, parentPop = NULL,founderM = NULL, sym = NULL,
     #EM_litter <- log2(founderM$EM[index_EM])*globalSP$EM
 
     for(ind in 1:nInd(pop)){
-      acquiredSp[ind,] <- founderM$PM0 * log2(founderM$PM)* globalSP$PM
-    # acquiredSp[ind, index_EM] <- acquiredSp[ind, index_EM] + EM_litter
+      acquiredSp[ind,] <- founderM$PM0 * log2(founderM$PM)
+     # acquiredSp[ind, index_EM] <- acquiredSp[ind, index_EM] + EM_litter
 
     }
 
