@@ -301,7 +301,7 @@ GlobalSP <- R6Class(
       self$MH.high <- MH.high
       self$MH.H <- MH.H
       self$meanMH <- meanMH
-      selfvarMH <- varMH
+      self$varMH <- varMH
 
       invisible(self)
     },
