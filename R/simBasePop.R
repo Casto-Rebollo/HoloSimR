@@ -174,13 +174,21 @@ simBasePop <- function(model, founderPop = NULL,
   #Check for symbiosis effect
   if(1%in%globalSP$symbiosis){
     #Scale the interaction matrix according to the base population microbiota abundance
-    if((globalSP$s2+h) >1){
-      if(is.null(globalSP$MH.H)){
+    
+    if(is.null(globalSP$MH.H)){
+      if((globalSP$s2+h) >1){
         stop("Please check the values for s2 and h2. The must sum 1 as maximun")
       }
-      if(!is.null(globalSP$MH.H)){
-        stop("Please check the values for s2. Remember that simulating H scenario, s is a proportion of VE")
       }
+    if(!is.null(globalSP$MH.H)){
+       varI.sp <- varE.sp * globalSP$s2
+       varE_sym.sp <- varE.sp - varI.sp
+
+       total <- varG.sp + varI.sp + varE_sym.sp
+       if(total > globalSP$varP){
+        print(total, globalSP$varP)
+        stop("Please check the values for s2. Remember that simulating H scenario, s is a proportion of VE")
+       }
       
     }
 
