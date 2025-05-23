@@ -63,8 +63,13 @@ setFounderM <- function(globalSP = NULL){
       stop("You are not using a database. Number of species to simulate is required!!")
     }
   }
+  if(!is.null(globalSP$dataM)){
+    sp_limit <- round(mean(rowSums(data)))
+  }else{
+    sp_limit <- globalSP$getPrivate()$bioLimit
+  }
   simEM <- sim_sad(s_pool = globalSP$nSpecies, # nolint
-                   n_sim = globalSP$getPrivate()$bioLimit,
+                   n_sim = sp_limit,
                    sad_type = "nbinom",
                    sad_coef = list(size = 1, prob = 0.0001),
                    fix_s_sim = FALSE,
