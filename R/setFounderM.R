@@ -122,67 +122,6 @@ setFounderM <- function(globalSP = NULL){
 
   writeLines("1. Microbiota architecture DONE")
 
-  ######################
-  # HOST GENOME EFFECT #
-  ######################
-
-  # QTL effect (host genotype) on microbiota (Microbial heritability)
-  if("H" %in% globalSP$model || globalSP$model == "All"){
-    if(is.null(globalSP$MH.H)){
-
-      common_factor <- (globalSP$meanMH * (1 - globalSP$meanMH) / globalSP$varMH) - 1
-      alpha <- globalSP$meanMH * common_factor
-      beta <- (1 - globalSP$meanMH) * common_factor
-
-      gSP$MH.H <<- rbeta(globalSP$nSpecies, alpha, beta)
-      gSP$MH.M <<- globalSP$MH.H
-
-      globalSP$MH.H <- rbeta(globalSP$nSpecies, alpha, beta)
-      globalSP$MH.M <- globalSP$MH.H
-
-    }
-    MH.nSp_index <- which(globalSP$MH.H != 0)
-
-  }else{
-    MH.w <- round(globalSP$nSpEff * globalSP$propMH.wSp)
-    MH.all <- round(globalSP$nSpecies * globalSP$propMH)
-
-    if(MH.all < MH.w){
-      MH.w <- MH.all * globalSP$propMH.wSp
-    }
-
-    MH.wSp_index <- sample(which(founderM$w != 0), MH.w) #MH of species with w
-    founderM$beta <- 0
-    founderM$beta[MH.wSp_index] <- 1
-
-    MH.nSp <- MH.all - MH.w #Rest of MH species
-
-    MH_index <- sample(which(founderM$beta == 0 ), MH.nSp)
-    founderM$beta[MH_index] <- 1
-
-    # All species with microbial heritability
-    MH.nSp_index <- which(founderM$beta == 1)
-  }
-
-
-
-  # Pre-allocate beta matrix
-  beta <- matrix(0, nrow = globalSP$nChr * globalSP$nQTLchr, ncol = globalSP$nSpecies)
-
-  # Sample QTL.MH_index directly without replacement
-  QTL.MH_index <- sample.int(globalSP$nQTLchr * globalSP$nChr,
-                             size = round(globalSP$nQTLchr * globalSP$nChr * globalSP$propQTL),
-                             replace = FALSE)
-
-  # Generate random numbers and samples
-  random_numbers <- rgamma(length(QTL.MH_index), shape = 0.2, scale = 5)
-  samples <- rep(1, round(globalSP$nQTLchr * globalSP$nChr * globalSP$propQTL))
-
-  # Assign values to beta matrix
-  beta[QTL.MH_index, MH.nSp_index] <- matrix(random_numbers * samples, nrow = length(QTL.MH_index))
-
-  beta <- as.data.frame(beta)
-  writeLines("2. Host genetic effect on abundance DONE")
   #############
   # Symbiosis #
   #############
@@ -238,7 +177,67 @@ setFounderM <- function(globalSP = NULL){
     founderMxM <- as.data.frame(cor(data))
   }
 
-  writeLines("3. Symbiosis DONE")
+  writeLines("2. Symbiosis DONE")
+
+  ######################
+  # HOST GENOME EFFECT #
+  ######################
+
+  # QTL effect (host genotype) on microbiota (Microbial heritability)
+  if("H" %in% globalSP$model || globalSP$model == "All"){
+    if(is.null(globalSP$MH.H)){
+
+      common_factor <- (globalSP$meanMH * (1 - globalSP$meanMH) / globalSP$varMH) - 1
+      alpha <- globalSP$meanMH * common_factor
+      beta <- (1 - globalSP$meanMH) * common_factor
+
+      gSP$MH.H <<- rbeta(globalSP$nSpecies, alpha, beta)
+      gSP$MH.M <<- globalSP$MH.H
+
+      globalSP$MH.H <- rbeta(globalSP$nSpecies, alpha, beta)
+      globalSP$MH.M <- globalSP$MH.H
+
+    }
+    MH.nSp_index <- which(globalSP$MH.H != 0)
+
+  }else{
+    MH.w <- round(globalSP$nSpEff * globalSP$propMH.wSp)
+    MH.all <- round(globalSP$nSpecies * globalSP$propMH)
+
+    if(MH.all < MH.w){
+      MH.w <- MH.all * globalSP$propMH.wSp
+    }
+
+    MH.wSp_index <- sample(which(founderM$w != 0), MH.w) #MH of species with w
+    founderM$beta <- 0
+    founderM$beta[MH.wSp_index] <- 1
+
+    MH.nSp <- MH.all - MH.w #Rest of MH species
+
+    MH_index <- sample(which(founderM$beta == 0 ), MH.nSp)
+    founderM$beta[MH_index] <- 1
+
+    # All species with microbial heritability
+    MH.nSp_index <- which(founderM$beta == 1)
+  }
+
+
+
+  # Pre-allocate beta matrix
+  beta <- matrix(0, nrow = globalSP$nChr * globalSP$nQTLchr, ncol = globalSP$nSpecies)
+
+  # Sample QTL.MH_index directly without replacement
+  QTL.MH_index <- sample.int(globalSP$nQTLchr * globalSP$nChr,
+                             size = round(globalSP$nQTLchr * globalSP$nChr * globalSP$propQTL),
+                             replace = FALSE)
+
+  # Generate random numbers and samples with structure of interacction 
+  for(i in MH.nSp_index){
+     beta[QTL.MH_index, i] <- rgamma(length(QTL.MH_index), shape = 0.2, scale = 5)
+  }
+
+  beta <- as.data.frame(beta)
+  writeLines("3. Host genetic effect on abundance DONE")
 
   return(list("architecture" = founderM, "beta" = beta, "symbiosis" = founderMxM))
 
