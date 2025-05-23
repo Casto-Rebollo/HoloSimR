@@ -261,8 +261,8 @@ GlobalSP <- R6Class(
 
     #' @description
     #' Function to set species parameters for the GlobalSP object.
-    #' @param nSpecies Total number of microbial species in the community.
-    #' @param nSp0 Number of initial microbial species.
+    #' @param nSpecies Total number of microbial species in the community. \emph{Default} is NULL
+    #' @param nSp0 Number of initial microbial species. \emph{Default} is NULL
     #' @param nSpEff Number of effective microbial species affecting the trait.
     #' @param PM Proportion of parental microbiota exposed to offspring.
     #' @param EM Proportion of environmental microbiota exposed to offspring.
@@ -279,7 +279,7 @@ GlobalSP <- R6Class(
     #' @param MH.H Vector of microbial heritability in H scenario.
     #' @param meanMH Mean of microbial heritability in H scenario.
     #' @param varM Variance of microbial heritability in H scenario.
-    setSpecies = function(nSpecies, nSp0, nSpEff, PM = 0.5, EM = 0.5, propMH = 0.1,
+    setSpecies = function(nSpecies = NULL, nSp0 = NULL, nSpEff, PM = 0.5, EM = 0.5, propMH = 0.1,
                           propQTL = 0.1, propMH.wSp = 0.5, symbiosis = c(0, 1),
                           s2 = 0.2, MH.G = 0.2, MH.M = 0.2,
                           MH.low = 0.1, MH.medium = 0.3, MH.high = 0.6,
