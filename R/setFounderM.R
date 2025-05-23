@@ -50,6 +50,10 @@ setFounderM <- function(globalSP = NULL){
     data <- read.table(globalSP$dataM, stringsAsFactors = F, header = T, sep="\t")
     globalSP$nSpecies <<- ncol(data)
     globalSP$symbiosis <<- 1
+  }else{
+    if(is.null(globalSP$nSpecies)){
+      stop("You are not using a database. Number of species to simulate is required!!")
+    }
   }
   simEM <- sim_sad(s_pool = globalSP$nSpecies, # nolint
                    n_sim = globalSP$getPrivate()$bioLimit,
