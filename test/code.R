@@ -42,17 +42,7 @@ founderPop = newPop(founderG)
 founderPop@pheno
 
 ##Create Base population manually
-basePop <- simBasePop(model = "H") 
+gSP$s2 <- 0.5 #50% of VE. For variable h2, the s2 is a proportion of the VE to avoid VG + VS + VE > 1
+basePop <- simBasePop(model = "H")
 
-geno <- pullQtlGeno(founderPop,
-                      trait = 1,
-                      chr = NULL,
-                      simParam = SP)
-geno <- pullSnpGeno(founderPop,
-                      trait = 1,
-                      chr = NULL,
-                      simParam = SP)
-geno <- pullSegSiteGeno(founderPop,
-                      trait = 1,
-                      chr = NULL,
-                      simParam = SP)
+

@@ -179,14 +179,15 @@ simBasePop <- function(model, founderPop = NULL,
       if((globalSP$s2+h) >1){
         stop("Please check the values for s2 and h2. The must sum 1 as maximun")
       }
-      }
+    }
+    
     if(!is.null(globalSP$MH.H)){
        varI.sp <- varE.sp * globalSP$s2
        varE_sym.sp <- varE.sp - varI.sp
 
        total <- varG.sp + varI.sp + varE_sym.sp
-       if(total > globalSP$varP){
-        print(total, globalSP$varP)
+       if(total[1] > (founderM$SD^2)[1]){
+        print(total[1], (founderM$SD^2)[1])
         stop("Please check the values for s2. Remember that simulating H scenario, s is a proportion of VE")
        }
       
