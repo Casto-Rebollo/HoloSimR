@@ -134,6 +134,7 @@ simBasePop <- function(model, founderPop = NULL,
                       trait = 1,
                       chr = NULL,
                       simParam = SP)
+  geno <- geno - 1
 
   #Scale the genetic effect on the microbiome abundance
   scaleGxM <- geno %*% as.matrix(beta)
