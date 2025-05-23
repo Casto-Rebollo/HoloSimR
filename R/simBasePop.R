@@ -99,7 +99,7 @@ simBasePop <- function(model, founderPop = NULL,
   }
 
 
-  acquiredSp <- acquiredSpecies(pop = Pop, rndSeed = rndSeed)
+  #acquiredSp <- acquiredSpecies(pop = Pop, rndSeed = rndSeed)
 
 
   if(progressBar == TRUE){
@@ -124,8 +124,8 @@ simBasePop <- function(model, founderPop = NULL,
     H = globalSP$MH.H
   )
 
-  varG.sp <- (founderM$SD^2) * h
-  varE.sp <- (founderM$SD^2) - varG.sp
+  varG.sp <- (founderM[["architecture"]]$SD^2) * h
+  varE.sp <- (founderM[["architecture"]]$SD^2) - varG.sp
 
   set.seed(rndSeed)
 
@@ -135,6 +135,8 @@ simBasePop <- function(model, founderPop = NULL,
                       chr = NULL,
                       simParam = SP)
   geno <- geno - 1
+
+  geno <- scale(geno, center = TRUE, scale = FALSE)
 
   #Scale the genetic effect on the microbiome abundance
   scaleGxM <- geno %*% as.matrix(beta)
@@ -146,7 +148,7 @@ simBasePop <- function(model, founderPop = NULL,
 
   baseGxM.scaled[is.na(baseGxM.scaled)] <- 0
   geno.biome <- geno %*% as.matrix(baseGxM.scaled)
-
+  
   if(progressBar == TRUE){
     writeLines("--> Scaled beta matrix DONE")
   }
@@ -154,18 +156,24 @@ simBasePop <- function(model, founderPop = NULL,
 
   #Compute the microbiome without symbiosis
   set.seed(rndSeed)
-  mbiome_VE <- mvrnorm(nInd(Pop),mu = as.vector(founderM$GR_PM) ,Sigma = diag(c(varE.sp)))
+  
+  #Environment
+
+  mbiome_VE <- mvrnorm(nInd(Pop),mu = rep(0, globalSP$nSpecies) ,Sigma = diag(c(varE.sp)))
 
   mbiome <- matrix((geno.biome + mbiome_VE),
-                   nrow = nInd(Pop), ncol = length(founderM$w),
-                   dimnames = list(NULL, founderM$Species))
+                   nrow = nInd(Pop), ncol = length(founderM[["architecture"]]$w),
+                   dimnames = list(NULL, founderM[["architecture"]]$Species))
+  
+  
+  mbiome <- sweep(mbiome, 2, founderM[["architecture"]]$PM, `+`)
+  #mbiome <- expected_means + g_scaled + e_scaled
 
-  mbiome <- round(mbiome * acquiredSp)
   mbiome[mbiome < 0] <- 0
-
+  
   #Scale microbiota without symbiosis
-  mv.raw <- mbiome %*% founderM$w
-  wScale0 <- as.vector(sqrt((globalSP$m2*globalSP$varP) / var(mv.raw))) * founderM$w
+  mv.raw <- mbiome %*% founderM[["architecture"]]$w
+  wScale0 <- as.vector(sqrt((globalSP$m2*globalSP$varP) / var(mv.raw))) * founderM[["architecture"]]$w
 
   mv.base <- mean(mbiome %*% wScale0)
 
@@ -187,7 +195,7 @@ simBasePop <- function(model, founderPop = NULL,
        varE_sym.sp <- varE.sp - varI.sp
 
        total <- varG.sp + varI.sp + varE_sym.sp
-       if(total[1] > (founderM$SD^2)[1]){
+       if(total[1] > (founderM[["architecture"]]$SD[1]^2)[1]){
         print(total[1], (founderM$SD^2)[1])
         stop("Please check the values for s2. Remember that simulating H scenario, s is a proportion of VE")
        }
@@ -201,11 +209,11 @@ simBasePop <- function(model, founderPop = NULL,
     
 
     set.seed(rndSeed)
-    mbiome_VE <- mvrnorm(nInd(pop),mu = as.vector(founderM$GR_PM), Sigma = diag(c(varE_sym.sp)))
+    mbiome_VE <- mvrnorm(nInd(pop),mu = rep(0, globalSP$nSpecies), Sigma = diag(c(varE_sym.sp)))
 
     mbiome_sym <- matrix((geno.biome + mbiome_VE),
-                     nrow = nInd(pop), ncol = length(founderM$w),
-                     dimnames = list(NULL, founderM$Species))
+                     nrow = nInd(pop), ncol = length(founderM[["architecture"]]$w),
+                     dimnames = list(NULL, founderM[["architecture"]]$Species))
 
     # Implement multivariate gamma with copula
     gauss_cop <- normalCopula(param = P2p(founderMxM), 
@@ -213,28 +221,39 @@ simBasePop <- function(model, founderPop = NULL,
 
     # Generate correlated uniforms via Gaussian copula
     set.seed(rndSeed)
-    u <- copula::rCopula(nInd(pop), gauss_cop)
-
-    mbiome.sym <- NULL
+    u <- copula::rCopula(globalSP$nSpecies, gauss_cop)
+    
+    gamma.sym <- NULL
     for(i in 1:globalSP$nSpecies){
-      mbiome.sym <- cbind(mbiome.sym,
-        qgamma(u[,i], shape=0.2, rate=0.5)
+      gamma.sym <- cbind(gamma.sym,
+        qgamma(u[,i], shape=0.2,rate=5)
       )
     }
+
+    min <- apply(mbiome_sym,2,min)
+    max <- apply(mbiome_sym,2,max)
+
+    scale_mbiome <- mbiome_sym
+    for(sp in 1:ncol(mbiome_sym)){
+      scale_mbiome[,sp] <-2*((mbiome_sym[,sp] - min[sp])/(max[sp]-min[sp])) -1
+    }
+
+    mbiome_scaled <- as.data.frame(lapply(mbiome_sym, scale_to_minus1_1))
+    scaleMxM <- mbiome_scaled %*% as.matrix(gamma.sym)
+    varMxM <- apply(scaleMxM, 2, var)
     
-    varMxM <- apply(mbiome.sym, 2, var)
-    
-    baseMxM.scaled <- apply(mbiome.sym, 2,
+    baseMxM.scaled <- gamma.sym
+    baseMxM.scaled <- apply(gamma.sym, 1,
                             function(x) x * sqrt(varI.sp / varMxM))
 
-    mbiome.sym <- mbiome.sym%*%baseMxM.scaled            
+    mbiome.sym <- mbiome_sym%*%baseMxM.scaled            
 
     #Scale microbiota with symbiosis
     mbiome_sym <- matrix((mbiome_sym + mbiome.sym),
-                         nrow = nInd(pop), ncol = length(founderM$w),
-                         dimnames = list(NULL, founderM$Species))
+                         nrow = nInd(pop), ncol = length(founderM[["architecture"]]$w),
+                         dimnames = list(NULL, founderM[["architecture"]]$Species))
 
-    mbiome_sym <- round(mbiome_sym * acquiredSp)
+    mbiome_sym <- sweep(mbiome_sym, 2, founderM[["architecture"]]$PM, `+`)
     mbiome_sym[mbiome_sym < 0] <- 0
 
     mv.raw <- mbiome_sym %*% founderM$w

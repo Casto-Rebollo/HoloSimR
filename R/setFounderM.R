@@ -140,10 +140,10 @@ setFounderM <- function(globalSP = NULL){
 
     # Create a vector of interaction types based on percentages
     interaction_types <- c(rep("commensal", round(globalSP$nSpecies * globalSP$getPrivate()$propComm)),
-                          rep("mutualism", round(globalSP$nSpecies * globalSP$getPrivate()$propMut)),
-                          rep("ammensalism", round(globalSP$nSpecies * globalSP$getPrivate()$propAmm)),
-                          rep("competition", round(globalSP$nSpecies * globalSP$getPrivate()$propComp)),
-                          rep("exploitation", round(globalSP$nSpecies * globalSP$getPrivate()$propExp)))
+                           rep("mutualism", round(globalSP$nSpecies * globalSP$getPrivate()$propMut)),
+                           rep("ammensalism", round(globalSP$nSpecies * globalSP$getPrivate()$propAmm)),
+                           rep("competition", round(globalSP$nSpecies * globalSP$getPrivate()$propComp)),
+                           rep("exploitation", round(globalSP$nSpecies * globalSP$getPrivate()$propExp)))
 
     # Sample interaction types
     interaction_types <- sample(interaction_types, size = nrow(upper_tri_indices), replace = TRUE)

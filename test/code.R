@@ -45,4 +45,33 @@ founderPop@pheno
 gSP$s2 <- 0.5 #50% of VE. For variable h2, the s2 is a proportion of the VE to avoid VG + VS + VE > 1
 basePop <- simBasePop(model = "H")
 
+##Plotting simulated distribution of microbiota
+df <- data.frame(
+  value = c(mbiome[,2],mbiome[,3],
+            data[,2],data[,3]),
+  type = factor(c(rep(paste("Simulated",names(data)[2]), nrow(mbiome)),
+                  rep(paste("Simulated",names(data)[3]), nrow(mbiome)),
+                  rep(paste("Real",names(data)[2]), nrow(data)),
+                  rep(paste("Real",names(data)[3]), nrow(data)))
+  )
+)
+
+##Plot
+ggplot(df, aes(x = value, fill = type, color = type)) +
+  geom_density(alpha = 0.3, size = 0.75) +
+  labs(
+    title = "Density Plot: Real vs Simulated Data",
+    x = "Value",
+    y = "Density",
+    fill = "Data Type",
+    color = "Data Type"
+  ) +
+  scale_color_manual(values = c("#00a7c7","#8d1c1a",
+                                "#835faa","#4c83c8","#708090","#4c83c8"))+
+  scale_fill_manual(values =c("#00a7c7","#8d1c1a",
+                              "#835faa","#4c83c8","#708090","#4c83c8"))+
+  scale_x_continuous(labels = function(x) round(x, 1))+
+
+  theme_classic()
+
 
