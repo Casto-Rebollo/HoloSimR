@@ -134,8 +134,11 @@ setFounderM <- function(globalSP = NULL){
       alpha <- globalSP$meanMH * common_factor
       beta <- (1 - globalSP$meanMH) * common_factor
 
-      globalSP$MH.H <<- rbeta(globalSP$nSpecies, alpha, beta)
-      globalSP$MH.M <<- globalSP$MH.H
+      gSP$MH.H <<- rbeta(globalSP$nSpecies, alpha, beta)
+      gSP$MH.M <<- globalSP$MH.H
+
+      globalSP$MH.H <- rbeta(globalSP$nSpecies, alpha, beta)
+      globalSP$MH.M <- globalSP$MH.H
 
     }
     MH.nSp_index <- which(globalSP$MH.H != 0)
