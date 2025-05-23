@@ -101,7 +101,8 @@ nextPop <- function(pop, crossPlan,
     }
 
     if(is.null(globalSP$nCross)){
-      globalSP$nCross <<- globalSP$nDam/globalSP$nSire
+      gSP$nCross <<- globalSP$nDam/globalSP$nSire
+      globalSP$nCross <- globalSP$nDam/globalSP$nSire
     }
 
     Pop <- makeCross(Poptmp, as.matrix(matePlan[,1:2]), nProgeny = nSon)

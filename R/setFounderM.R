@@ -48,8 +48,12 @@ setFounderM <- function(globalSP = NULL){
 
   if(!is.null(globalSP$dataM)){
     data <- read.table(globalSP$dataM, stringsAsFactors = F, header = T, sep="\t")
-    globalSP$nSpecies <<- ncol(data)
-    globalSP$symbiosis <<- 1
+    gSP$nSpecies <<- ncol(data)
+    gSP$symbiosis <<- 1
+
+    globalSP$nSpecies <- ncol(data)
+    globalSP$symbiosis <- 1
+
   }else{
     if(is.null(globalSP$nSpecies)){
       stop("You are not using a database. Number of species to simulate is required!!")
@@ -64,7 +68,8 @@ setFounderM <- function(globalSP = NULL){
   )
 
   if(is.null(globalSP$dataM)){
-    globalSP$nSpecies <<- length(simEM)
+    gSP$nSpecies <<- length(simEM)
+    globalSP$nSpecies <- length(simEM)
   }
   
   # Stable parameters of simulate species at founder population
