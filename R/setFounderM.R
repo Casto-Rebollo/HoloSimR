@@ -176,7 +176,7 @@ setFounderM <- function(globalSP = NULL){
 
   # Generate random numbers and samples
   random_numbers <- rgamma(length(QTL.MH_index), shape = 0.2, scale = 5)
-  samples <- sample(c(1, -1), round(globalSP$nQTLchr * globalSP$nChr * globalSP$propQTL), replace = TRUE)
+  samples <- rep(1, round(globalSP$nQTLchr * globalSP$nChr * globalSP$propQTL))
 
   # Assign values to beta matrix
   beta[QTL.MH_index, MH.nSp_index] <- matrix(random_numbers * samples, nrow = length(QTL.MH_index))
