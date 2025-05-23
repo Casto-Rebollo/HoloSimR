@@ -49,6 +49,10 @@ setFounderM <- function(globalSP = NULL){
   if(!is.null(globalSP$dataM)){
     data <- read.table(globalSP$dataM, stringsAsFactors = F, header = T, sep="\t")
     gSP$nSpecies <<- ncol(data)
+    if(is.null(globalSP$nSp0)){
+      gSP$nSp0 <<- ncol(data)
+      globalSP$nSp0 <- ncol(data)
+    }
     gSP$symbiosis <<- 1
 
     globalSP$nSpecies <- ncol(data)
