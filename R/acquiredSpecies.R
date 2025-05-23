@@ -75,13 +75,13 @@ acquiredSpecies <- function(pop, parentPop = NULL,founderM = NULL, sym = NULL,
 
   if(is.null(parentPop)){
     set.seed(rndSeed)
-    index_EM <- sample(c(1:length(founderM$w)),
-                       length(founderM$w) * globalSP$EM, prob = founderM$RA_EM)
-    EM_litter <- log2(founderM$EM[index_EM])*globalSP$EM
+    #index_EM <- sample(c(1:length(founderM$w)),
+    #                   length(founderM$w) * globalSP$EM, prob = founderM$RA_EM)
+    #EM_litter <- log2(founderM$EM[index_EM])*globalSP$EM
 
     for(ind in 1:nInd(pop)){
       acquiredSp[ind,] <- founderM$PM0 * log2(founderM$PM)* globalSP$PM
-      acquiredSp[ind, index_EM] <- acquiredSp[ind, index_EM] + EM_litter
+    # acquiredSp[ind, index_EM] <- acquiredSp[ind, index_EM] + EM_litter
 
     }
 
