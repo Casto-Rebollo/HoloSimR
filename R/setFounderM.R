@@ -104,8 +104,8 @@ setFounderM <- function(globalSP = NULL){
     founderM$PM0 <- 1
     founderM$PM <- colMeans(data)
     founderM$RA_PM0 <- founderM$PM/sum(founderM$PM)
-    founderM$GR_PM <- founderM$PM/log2(founderM$PM)
-    founderM$SD <- log2(apply(data,2,sd))
+    founderM$GR_PM <- founderM$PM/apply(log2(data+1),2,mean)
+    founderM$SD <- apply(log2(data+1),2,sd)
   }
   
 
