@@ -175,7 +175,7 @@ GlobalSP <- R6Class(
 
     nSire = 25,
     nDam = 125,
-    nCross = 5,
+    nCross = NULL,
     nSon = 8,
 
     # Trait parameters
