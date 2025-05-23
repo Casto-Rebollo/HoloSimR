@@ -299,7 +299,7 @@ GlobalSP <- R6Class(
       self$MH.low <- MH.low
       self$MH.medium <- MH.medium
       self$MH.high <- MH.high
-      self$MH.H <- MH.high
+      self$MH.H <- MH.H
       self$meanMH <- meanMH
       selfvarMH <- varMH
 
