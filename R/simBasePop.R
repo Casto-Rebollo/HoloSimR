@@ -66,15 +66,15 @@ simBasePop <- function(model, founderPop = NULL,
                        founderM = NULL, globalSP = NULL, rndSeed=NULL, progressBar = FALSE){
 
   if(is.null(globalSP)){
-    globalSP = get("gSP", envir = .GlobalEnv)
+    globalSP <- get("gSP", envir = .GlobalEnv)
   }
 
   if(is.null(founderPop)){
-    founderPop = get("founderPop", envir = .GlobalEnv)
+    founderPop <- get("founderPop", envir = .GlobalEnv)
   }
 
   if(is.null(founderM)){
-    founderM = get("founderM", envir = .GlobalEnv)
+    founderM <- get("founderM", envir = .GlobalEnv)
     founderMxM <- founderM[["symbiosis"]]
     beta <- founderM[["beta"]]
     founderM <- founderM[["architecture"]]
