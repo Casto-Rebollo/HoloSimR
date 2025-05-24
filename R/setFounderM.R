@@ -176,7 +176,7 @@ setFounderM <- function(globalSP = NULL){
     founderMxM <- founderMxM * matrix(rgamma(globalSP$nSpecies^2, shape = 0.2, scale = 5), nrow = globalSP$nSpecies)
     founderMxM <- as.data.frame(cor(founderMxM))
   }else{
-    founderMxM <- as.data.frame(cor(data))
+    founderMxM <- as.data.frame(cor(log(data)))
   }
 
   writeLines("2. Symbiosis DONE")
