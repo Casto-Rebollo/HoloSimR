@@ -63,6 +63,10 @@
 #' @field nSon (numeric)
 #' Number of progeny per cross.
 #'
+#' @field scale (character)
+#' Type of transformation to perform in the data. \emph{Default} is log ()
+#' Centered-log ratio transformation is also allowed ("clr")
+#'
 #' @field meanP (numeric)
 #' Mean value for the simulated trait.
 #'
@@ -177,6 +181,7 @@ GlobalSP <- R6Class(
     nDam = 125,
     nCross = NULL,
     nSon = 8,
+    scale = "log",
 
     # Trait parameters
     meanP = NULL,
@@ -225,9 +230,11 @@ GlobalSP <- R6Class(
     #' @param nDam Number of breeding dam. \emph{Default} is 125. 
     #' @param nCross Number of crosses per sire. \emph{Default} in \var{NULL}. If it is \var{NULL}, it will directly computed. 
     #' @param nSon Number of progeny per cross. \emph{Default} is 8.
+    #' @param scale Transformation to perform in the data. \emph{Default} log() is taken.
     initialize = function(nPop, dataM = NULL, nChr = 1, nQTLchr, segSITESchr = NULL,
                           animal = "GENERIC", nSire = 25, nDam = 125,
-                          nCross = NULL, selType = "Divergent", nyear, model = "NMH", nt = 1, nSim = 1){
+                          nCross = NULL, selType = "Divergent", nyear, model = "NMH", nt = 1, nSim = 1,
+                          scale = "log"){
       self$nPop <- nPop
       self$dataM <- dataM
       self$nChr <- nChr
@@ -242,6 +249,7 @@ GlobalSP <- R6Class(
       self$nSire <- nSire
       self$nDam <- nDam
       self$nCross <- nCross
+      self$scale <- scale
     },
 
     #' @description

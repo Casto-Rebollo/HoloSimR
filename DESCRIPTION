@@ -18,4 +18,5 @@ Depends:
 	R6,
 	stats,
 	ggplot2,
-	copula
+	copula,
+	compositions

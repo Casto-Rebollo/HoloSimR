@@ -19,7 +19,7 @@
 #'        \item{\code{beta}: Vector of 0 or 1 indicating the species abundance influenced by the host genome}}}
 #'    \item{\strong{beta}: Dataframe with the values of the genetic effect on the abundance of each species. Dimensions \eqn{nQTL} x \eqn{nSpecies}}
 #'    \item{\strong{symbiosis}: Dataframe with the symbiosis effect among species. Dimensions \eqn{nSpecies} x \eqn{nSpecies}}}
-#' @import mobsim
+#' @import mobsim compositions
 #' @importFrom stats runif rgamma
 #' @export
 #' @details
@@ -86,7 +86,11 @@ setFounderM <- function(globalSP = NULL){
 
   founderM <- data.frame(RA_EM = simEM / sum(simEM),
                          Species = paste("Sp", 1:globalSP$nSpecies, sep = ""))
-  founderM$EM <- sample(log(simEM))
+  founderM$EM <- switch(
+    scale,
+    log = log(simEM),
+    clr = clr(simEM)
+  )
  
   if(is.null(globalSP$dataM)){
     # Parental microbiome
@@ -94,17 +98,22 @@ setFounderM <- function(globalSP = NULL){
                             rep(0, globalSP$nSpecies - globalSP$nSp0))) #Position of species which are present in the founder population
 
     ###################################################################
-    founderM$PM <- sample(log(simEM)) #Mean of species abundance in the parental microbiome
-    founderM$SD <- round(sample(runif(globalSP$nSpecies, 0,2)) * log(founderM$PM),2) #Standard deviation of species abundance
-
-    founderM$RA_PM0[founderM$PM0 == 1] <- founderM$PM[founderM$PM0 == 1] / sum(founderM$PM[founderM$PM0 == 1])
-    founderM$RA_PM0[is.na(founderM$RA_PM0)] <- 0
+    founderM$PM <- sample(founderM$EM) #Mean of species abundance in the parental microbiome
+    founderM$SD <- round(sample(runif(globalSP$nSpecies, 0,2)) * founderM$PM,2) #Standard deviation of species abundance
   
   }else{
     founderM$PM0 <- 1
-    founderM$PM <- colMeans(log(data))
-    founderM$RA_PM0 <- founderM$PM/sum(founderM$PM)
-    founderM$SD <- apply(log(data),2,sd)
+    founderM$PM <- switch(
+    scale,
+    log = colMeans(log(data)),
+    clr = colMeans(clr(data))
+    )
+
+    founderM$SD <- switch(
+    scale,
+    log = apply(log(data), 2, sd),
+    clr = apply(clr(data), 2, sd)
+    )
   }
   
   #################################
@@ -223,7 +232,6 @@ setFounderM <- function(globalSP = NULL){
     # All species with microbial heritability
     MH.nSp_index <- which(founderM$beta == 1)
   }
-
 
 
   # Pre-allocate beta matrix
