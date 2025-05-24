@@ -246,7 +246,7 @@ simBasePop <- function(model, founderPop = NULL,
     baseMxM.scaled <- apply(gamma.sym, 1,
                             function(x) x * sqrt(varI.sp / varMxM))
 
-    mbiome.sym <- mbiome_sym%*%baseMxM.scaled            
+    mbiome.sym <- mbiome_scaled%*%baseMxM.scaled            
 
     #Scale microbiota with symbiosis
     mbiome_sym <- matrix((mbiome_sym + mbiome.sym),

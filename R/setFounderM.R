@@ -85,7 +85,7 @@ setFounderM <- function(globalSP = NULL){
 
   founderM <- data.frame(RA_EM = simEM / sum(simEM),
                          Species = paste("Sp", 1:globalSP$nSpecies, sep = ""))
-  founderM$EM <- sample(simEM)
+  founderM$EM <- sample(log(simEM))
  
   if(is.null(globalSP$dataM)){
     # Parental microbiome
@@ -93,17 +93,17 @@ setFounderM <- function(globalSP = NULL){
                             rep(0, globalSP$nSpecies - globalSP$nSp0))) #Position of species which are present in the founder population
 
     ###################################################################
-    founderM$PM <- sample(simEM) #Mean of species abundance in the parental microbiome
-    founderM$SD <- round(sample(runif(globalSP$nSpecies, 0,2)) * founderM$PM,2) #Standard deviation of species abundance
+    founderM$PM <- sample(log(simEM)) #Mean of species abundance in the parental microbiome
+    founderM$SD <- round(sample(runif(globalSP$nSpecies, 0,2)) * log(founderM$PM),2) #Standard deviation of species abundance
 
     founderM$RA_PM0[founderM$PM0 == 1] <- founderM$PM[founderM$PM0 == 1] / sum(founderM$PM[founderM$PM0 == 1])
     founderM$RA_PM0[is.na(founderM$RA_PM0)] <- 0
   
   }else{
     founderM$PM0 <- 1
-    founderM$PM <- colMeans(data)
+    founderM$PM <- colMeans(log(data))
     founderM$RA_PM0 <- founderM$PM/sum(founderM$PM)
-    founderM$SD <- apply(data,2,sd)
+    founderM$SD <- apply(log(data),2,sd)
   }
   
   #################################
