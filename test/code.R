@@ -32,7 +32,7 @@ Pop <- makeP(pop = basePop$Pop, model = "H", sym = 1,
 #hist(Pop@pheno); range(Pop@pheno)
 
 # Select breeding animals from basePop
-parent <- selectBreeding(pop = Pop, g0 = TRUE)
+parent <- selectBreeding(pop = Pop, g0 = TRUE, sym = 1, selby="gv_mv")
 #parent$Male_low ; parent$Dam_low
 
 # Create mating plan for next generation

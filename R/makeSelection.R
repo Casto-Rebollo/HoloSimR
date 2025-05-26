@@ -191,7 +191,7 @@ makeSelection <- function(g = NULL, model = NULL, selType = NULL, sym = NULL,
           parentPop <- Pop
 
           #Select breeding animals
-          parent <- selectBreeding(pop = parentPop, sex = sex, g0 = TRUE, LS = LS)
+          parent <- selectBreeding(pop = parentPop, sex = sex, g0 = TRUE, LS = LS, sym = iter_sym)
 
           #Creation of mating plan for next generation
           crossPlan <- matingPLAN(parent = parent)
@@ -256,7 +256,7 @@ makeSelection <- function(g = NULL, model = NULL, selType = NULL, sym = NULL,
             #Selection breeding animals and creation of mating plan
             parent <- selectBreeding(pop = Pop,
                                      sex = sex,
-                                     selType = selType_iter, LS = LS)
+                                     selType = selType_iter, LS = LS, sym = iter_sym)
 
             crossPlan <- matingPLAN(parent = parent, selType = selType_iter)
 
