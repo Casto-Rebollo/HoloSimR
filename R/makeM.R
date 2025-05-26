@@ -137,40 +137,35 @@ makeM <- function(pop,sym = 0,
                       trait = 1,
                       chr = NULL,
                       simParam = SP)
+  geno <- geno - 1
+
+  geno <- scale(geno, center = TRUE, scale = FALSE)
 
   geno.biome <- geno %*% as.matrix(baseGxM.scaled)
 
   set.seed(rndSeed)
   if(sym == 1){
-    mbiome_VE <- mvrnorm(nInd(pop),mu = c(founderM$GR_PM) ,Sigma = diag(c(varE_sym)))
-    mbiome <- matrix((geno.biome + mbiome_VE),
-                     nrow = nInd(pop), ncol = nrow(founderM))
+    mbiome_VE <- mvrnorm(nInd(pop),mu = rep(0, globalSP$nSpecies), Sigma = diag(c(varE_sym.sp)))
 
-    # Implement multivariate gamma with copula
-    gauss_cop <- normalCopula(param = P2p(founderMxM), 
-                              dim = globalSP$nSpecies, dispstr = "un")
+    mbiome_sym <- matrix((geno.biome + mbiome_VE),
+                     nrow = nInd(pop), ncol = length(founderM$w),
+                     dimnames = list(NULL, founderM$Species))
 
-    # Generate correlated uniforms via Gaussian copula
-    set.seed(rndSeed)
-    u <- copula::rCopula(nInd(pop), gauss_cop)
+    #Generate matrix of abscence/presence of specie in the individual    
+    mbiome_acq <- ifelse(mbiome_sym<0,0,1)
+    scale_mbiome <- scale(mbiome_acq, center = TRUE, scale = FALSE)
 
-    mbiomeMxM <- NULL
-    for(i in 1:globalSP$nSpecies){
-      mbiomeMxM <- cbind(mbiomeMxM,
-        qgamma(u[,i], shape=0.2, rate=0.5)
-      )
-    }
+    mbiome.sym <- scale_mbiome%*%baseMxM.scaled          
 
-    mbiomeMxM <- mbiomeMxM %*% as.matrix(baseMxM.scaled)
-    mbiome <- matrix(round(acquiredSp *(mbiome + mbiomeMxM), 0),
-                     nrow = nInd(pop), ncol = nrow(founderM))
+    #Scale microbiota with symbiosis
+    mbiome <- matrix((acquiredSp + mbiome_sym + mbiome.sym),
+                         nrow = nInd(pop), ncol = length(founderM$w),
+                         dimnames = list(NULL, founderM$Species))
   }else{
-    mbiome_VE <- mvrnorm(nInd(pop),mu = c(founderM$GR_PM) ,Sigma = diag(c(varE)))
-    mbiome <- matrix(round(acquiredSp * (geno.biome + mbiome_VE), 0),
+    mbiome_VE <- mvrnorm(nInd(pop),mu = rep(0, globalSP$nSpecies) ,Sigma = diag(c(varE)))
+    mbiome <- matrix((acquiredSp + geno.biome + mbiome_VE),
                      nrow = nInd(pop), ncol = nrow(founderM))
   }
-
-  mbiome[mbiome < 0] <- 0
   colnames(mbiome) <- founderM$Species
 
 

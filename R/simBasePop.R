@@ -99,7 +99,7 @@ simBasePop <- function(model, founderPop = NULL,
   }
 
 
-  #acquiredSp <- acquiredSpecies(pop = Pop, rndSeed = rndSeed)
+  acquiredSp <- acquiredSpecies(pop = Pop, rndSeed = rndSeed)
 
 
   if(progressBar == TRUE){
@@ -161,12 +161,12 @@ simBasePop <- function(model, founderPop = NULL,
 
   mbiome_VE <- mvrnorm(nInd(Pop),mu = rep(0, globalSP$nSpecies) ,Sigma = diag(c(varE.sp)))
 
-  mbiome <- matrix((geno.biome + mbiome_VE),
+  mbiome <- matrix((acquiredSp + geno.biome + mbiome_VE),
                    nrow = nInd(Pop), ncol = length(founderM$w),
                    dimnames = list(NULL, founderM$Species))
   
   
-  mbiome <- sweep(mbiome, 2, founderM$PM, `+`)
+  #mbiome <- sweep(mbiome, 2, founderM$PM, `+`)
   
   #Scale microbiota without symbiosis
   mv.raw <- mbiome %*% founderM$w
@@ -240,11 +240,11 @@ simBasePop <- function(model, founderPop = NULL,
     mbiome.sym <- scale_mbiome%*%baseMxM.scaled          
 
     #Scale microbiota with symbiosis
-    mbiome_total <- matrix((mbiome_sym + mbiome.sym),
+    mbiome_total <- matrix((acquiredSp + mbiome_sym + mbiome.sym),
                          nrow = nInd(pop), ncol = length(founderM$w),
                          dimnames = list(NULL, founderM$Species))
 
-    mbiome_total <- sweep(mbiome_total, 2, founderM$PM, `+`)
+    #mbiome_total <- sweep(mbiome_total, 2, founderM$PM, `+`)
 
     mv.raw <- mbiome_total %*% founderM$w
     wScale <- as.vector(sqrt((globalSP$m2*c(globalSP$varP)) / var(mv.raw))) * founderM$w

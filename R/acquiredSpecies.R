@@ -80,7 +80,7 @@ acquiredSpecies <- function(pop, parentPop = NULL,founderM = NULL, sym = NULL,
     #EM_litter <- log2(founderM$EM[index_EM])*globalSP$EM
 
     for(ind in 1:nInd(pop)){
-      acquiredSp[ind,] <- founderM$PM0 * log2(founderM$PM)
+      acquiredSp[ind,] <- founderM$PM0 * founderM$PM
      # acquiredSp[ind, index_EM] <- acquiredSp[ind, index_EM] + EM_litter
 
     }
@@ -115,14 +115,14 @@ acquiredSpecies <- function(pop, parentPop = NULL,founderM = NULL, sym = NULL,
       nSon_index <- which(pop@mother == mom)
 
       index_PM <- which(rXo.mom[rownames(rXo.mom) == mom, ] != 0)
-      PM_litter <- log2(rXo.mom[rownames(rXo.mom) == mom, index_PM])*globalSP$PM
+      PM_litter <- rXo.mom[rownames(rXo.mom) == mom, index_PM] * globalSP$PM
 
       ## Environmental microbiota
       set.seed(rndSeed)
       index_EM <- sample(c(1:length(founderM$w)),
                          length(founderM$w) * globalSP$EM, prob = founderM$RA_EM)
 
-      EM_litter <- log2(founderM$EM[index_EM])*globalSP$EM
+      EM_litter <- founderM$EM[index_EM]*globalSP$EM
 
       for(nson in nSon_index){
         acquiredSp[nson, index_PM] <- PM_litter
