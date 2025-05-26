@@ -5,8 +5,9 @@
 #' @param pop an object of \code{\link{MapPop-class}}
 #' @param nDam number of females to select. If \code{NULL}, it will be set by \code{nDam} from \code{\link{GlobalSP}}. Default 125.
 #' @param nSire number of males to select. If \code{NULL}, it will be set by \code{nSire} from \code{\link{GlobalSP}}. Default 25.
+#' @param sym for including selection considering symbiosis or not. \emph{Default} 0.
 #' @param selType Selection type (e.g., \dQuote{Divergent}, \dQuote{Low}, \dQuote{High}). If \code{NULL}, it will be obtained from the global environment
-#' @param selby type of selection; Phenotypic selection (\dQuote{phe}; Default) or Genomic selection (\dQuote{gv})
+#' @param selby type of selection; Phenotypic selection (\dQuote{phe}; Default), Genomic selection (\dQuote{gv}), Microbiota selection (\Quote{mv}) or both (\dQuote{gv_mv})
 #' @param sex indicate if the phenotype belongs exclusively to females ("F"). Default \dQuote{both}
 #' @param maxFS maximum number of full siblings allowed when selecting females.
 #' @param g0 \code{TRUE} for indicating that the animals will be selected from the base population. Default \code{FALSE}
@@ -66,7 +67,7 @@
 #' # Selection of breeding animals from basePop
 #' parent <- selectBreeding(pop = Pop, nDam = 125, nSire = 25, sex = "F", g0 = TRUE)
 #'
-selectBreeding <- function(pop, nDam = NULL, nSire = NULL,
+selectBreeding <- function(pop, nDam = NULL, nSire = NULL, sym = 0,
                            selType = NULL,selby = "phe", sex = "both",
                            maxFS = 2, g0 = FALSE, LS = FALSE, globalSP = NULL){
   if(is.null(globalSP)){
@@ -111,9 +112,38 @@ selectBreeding <- function(pop, nDam = NULL, nSire = NULL,
         if(selby == "gv"){
           Poptmp <- Poptmp[order(Poptmp@gv, decreasing = value)]
           select.Dam$Sel_value <- as.numeric(Poptmp@gv[1:nDam])
-        }else{
+        }
+        
+        if(selby == "mv") {
+          indx <- switch(as.character(sym),
+          "0" = order(unlist(lapply(Poptmp@misc,function(x) x$mv[1])), decreasing = value),
+          "1" = order(unlist(lapply(Poptmp@misc,function(x) x$mv_sym[1])), decreasing = value)
+          )
+
+          value_mv <- switch(as.character(sym),
+          "0" = unlist(lapply(Poptmp@misc,function(x) x$mv[1])),
+          "1" = unlist(lapply(Poptmp@misc,function(x) x$mv_sym[1]))
+          )
+          Poptmp <- Poptmp[indx]
+          select.Dam$Sel_value <- as.numeric(value_mv[1:nDam])
+        }
+
+        if(selby == "phe"){
           Poptmp <- Poptmp[order(Poptmp@pheno, decreasing = value)]
           select.Dam$Sel_value <- as.numeric(Poptmp@pheno[1:nDam])
+        }
+
+        if(selby == "gv_mv"){
+          value_mv <- switch(as.character(sym),
+          "0" = unlist(lapply(Poptmp@misc,function(x) x$mv[1])),
+          "1" = unlist(lapply(Poptmp@misc,function(x) x$mv_sym[1]))
+          )
+          value_gv <- as.numeric(Poptmp@gv)
+          total_value <- value_gv + value_mv
+
+          Poptmp <- Poptmp[order(total_value, decreasing = value)]
+          total_value <- total_value[order(total_value, decreasing = value)]
+          select.Dam$Sel_value <- as.numeric(total_value[1:nDam])
         }
 
         #Remove from the population to select the dam with no offspring
@@ -175,6 +205,21 @@ selectBreeding <- function(pop, nDam = NULL, nSire = NULL,
                                   Poptmp@father[nD],
                                   Poptmp@mother[nD],
                                   Poptmp@pheno[nD]))
+          }
+
+          if(cond == TRUE & selby == "mv"){
+            select.Dam <- rbind(select.Dam,
+                                c(Poptmp@id[nD],
+                                  Poptmp@father[nD],
+                                  Poptmp@mother[nD],
+                                  value_mv[nD]))
+          }
+          if(cond == TRUE & selby == "gv_mv"){
+            select.Dam <- rbind(select.Dam,
+                                c(Poptmp@id[nD],
+                                  Poptmp@father[nD],
+                                  Poptmp@mother[nD],
+                                  total_value[nD]))
           }
 
           nD <- nD + 1
@@ -271,11 +316,40 @@ selectBreeding <- function(pop, nDam = NULL, nSire = NULL,
           Poptmp <- tmp.male[order(tmp.male@gv, decreasing = value)]
           select.male$Sel_value <- as.numeric(Poptmp@gv[1:nSire])
 
-        }else{
-          Poptmp <- tmp.male[order(tmp.male@pheno, decreasing = value)]
-          select.male$Sel_value <- as.numeric(Poptmp@pheno[1:nSire])
+        
+        }
+        if(selby == "mv") {
+          indx <- switch(as.character(sym),
+          "0" = order(unlist(lapply(tmp.male@misc,function(x) x$mv[1])), decreasing = value),
+          "1" = order(unlist(lapply(tmp.male@misc,function(x) x$mv_sym[1])), decreasing = value)
+          )
+
+          value_mv <- switch(as.character(sym),
+          "0" = unlist(lapply(tmp.male@misc,function(x) x$mv[1])),
+          "1" = unlist(lapply(tmp.male@misc,function(x) x$mv_sym[1]))
+          )
+
+          Poptmp <- tmp.male[indx]
+          select.male$Sel_value <- as.numeric(value_mv[1:nSire])
         }
 
+        if(selby == "phe"){
+          Poptmp <- tmp.male[order(tmp.male@pheno, decreasing = value)]
+          select.male$Sel_value <- as.numeric(tmp.male@pheno[1:nSire])
+        }
+
+        if(selby == "gv_mv"){
+          value_mv <- switch(as.character(sym),
+          "0" = unlist(lapply(tmp.male@misc,function(x) x$mv[1])),
+          "1" = unlist(lapply(tmp.male@misc,function(x) x$mv_sym[1]))
+          )
+          value_gv <- as.numeric(tmp.male@gv)
+          total_value <- value_gv + value_mv
+
+          Poptmp <- tmp.male[order(total_value, decreasing = value)]
+          total_value <- total_value[order(total_value, decreasing = value)]
+          select.male$Sel_value <- as.numeric(total_value[1:nSire])
+        }
 
         select.male$Male <- tmp.male@id[1:nSire]
         select.male$mother <- tmp.male@mother[1:nSire]
@@ -327,6 +401,22 @@ selectBreeding <- function(pop, nDam = NULL, nSire = NULL,
                                      Poptmp@father[nD],
                                      Poptmp@mother[nD],
                                      Poptmp@pheno[nD]))
+            }
+
+          if(cond == TRUE & selby == "mv"){
+              select.male <- rbind(select.male,
+                                   c(Poptmp@id[nD],
+                                     Poptmp@father[nD],
+                                     Poptmp@mother[nD],
+                                     value_mv[nD]))
+            }
+
+          if(cond == TRUE & selby == "gv_mv"){
+              select.male <- rbind(select.male,
+                                   c(Poptmp@id[nD],
+                                     Poptmp@father[nD],
+                                     Poptmp@mother[nD],
+                                     total_value[nD]))
             }
 
             nD <- nD + 1

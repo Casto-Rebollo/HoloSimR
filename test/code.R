@@ -1,7 +1,10 @@
+#-------------------------------------------------------------------------
+## Mandatory execution
+#-------------------------------------------------------------------------
+
 ##Setting simulation parameters
 gSP <- GlobalSP$new(nPop = 100, nChr = 3, nQTLchr = 100, 
-                    nyear = 10,nSire = 20, nDam = 500,
-                    selType = "Low")
+                    nyear = 10,nSire = 20, nDam = 500)
 
 gSP$setTrait(meanP = 3.66, varP = 0.46, h2 = 0.16, m2 = 0.13)
 gSP$setSpecies(nSpEff = 25, varMH = 0.028, meanMH = 0.47)
@@ -17,7 +20,9 @@ SP = essentialSP(founder = founderG, nSnpChr = 10000, minSnpFreq = 0.05)
 founderPop = newPop(founderG)
 #founderPop@pheno
 
-##Create Base population manually
+#-------------------------------------------------------------------------
+## Create Base population manually
+#-------------------------------------------------------------------------
 gSP$s2 <- 0.5 #50% of VE. For real values of h2 (non-constant), the s2 is a proportion of the VE to avoid VG + VS + VE > 1
 basePop <- simBasePop(model = "H")
 
@@ -33,5 +38,13 @@ parent <- selectBreeding(pop = Pop, g0 = TRUE)
 # Create mating plan for next generation
 crossPlan <- matingPLAN(parent = parent)
 
-# Generate new generation
-Pop <- nextPop(pop = Pop, crossPlan = crossPlan, nSon = 8, LS = TRUE)
+# Generate first generation of selection
+Pop <- nextPop(pop = Pop, crossPlan = crossPlan)
+#hist(Pop$PopLow@gv)
+
+#-------------------------------------------------------------------------
+## Automatize all selection (Paper)
+#-------------------------------------------------------------------------
+# rm(list = ls())
+# After founderPop creation
+selection <- makeSelection(iter = 10, model = "H")
