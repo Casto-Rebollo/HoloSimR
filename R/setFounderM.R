@@ -86,7 +86,7 @@ setFounderM <- function(globalSP = NULL){
   }
   
   # Stable parameters of simulate species at founder population
-
+  simEM <- sample(simEM)
   founderM <- data.frame(RA_EM = simEM / sum(simEM),
                          Species = paste("Sp", 1:globalSP$nSpecies, sep = ""))
   founderM$EM <- switch(
