@@ -72,12 +72,13 @@ makeP <- function(pop, model, sym = 0,
 
   vE <- switch(
     model,
-    G = globalSP$varP*(1-globalSP$h2),
-    M = globalSP$varP*(1-globalSP$m2),
-    NMH = globalSP$varP*(1-globalSP$m2 - globalSP$h2),
-    LMH = globalSP$varP*(1-globalSP$m2 - globalSP$h2),
-    MMH = globalSP$varP*(1-globalSP$m2 - globalSP$h2),
-    HMH = globalSP$varP*(1-globalSP$m2 - globalSP$h2)
+    G = globalSP$varP * (1 - globalSP$h2),
+    M = globalSP$varP * (1 - globalSP$m2),
+    NMH = globalSP$varP * (1 - globalSP$m2 - globalSP$h2),
+    LMH = globalSP$varP * (1 - globalSP$m2 - globalSP$h2),
+    MMH = globalSP$varP * (1 - globalSP$m2 - globalSP$h2),
+    HMH = globalSP$varP * (1 - globalSP$m2 - globalSP$h2),
+    H = globalSP$varP * (1 - globalSP$m2 - globalSP$h2)
   )
 
   if(model != "G"){

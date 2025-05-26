@@ -138,7 +138,6 @@ makeM <- function(pop,sym = 0,
                       chr = NULL,
                       simParam = SP)
   geno <- geno - 1
-
   geno <- scale(geno, center = TRUE, scale = FALSE)
 
   geno.biome <- geno %*% as.matrix(baseGxM.scaled)
