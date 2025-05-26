@@ -15,7 +15,7 @@ founderM = setFounderM(globalSP=gSP)
 
 SP = essentialSP(founder = founderG, nSnpChr = 10000, minSnpFreq = 0.05)
 founderPop = newPop(founderG)
-founderPop@pheno
+#founderPop@pheno
 
 ##Create Base population manually
 gSP$s2 <- 0.5 #50% of VE. For real values of h2 (non-constant), the s2 is a proportion of the VE to avoid VG + VS + VE > 1
@@ -23,5 +23,15 @@ basePop <- simBasePop(model = "H")
 
 # Compute phenotype in a base population
 Pop <- makeP(pop = basePop$Pop, model = "H", sym = 1,
-            limitTrait = c(0, NA))
-hist(Pop@pheno); range(Pop@pheno)
+             limTrait = c(0,NA))
+#hist(Pop@pheno); range(Pop@pheno)
+
+# Select breeding animals from basePop
+parent <- selectBreeding(pop = Pop, g0 = TRUE)
+#parent$Male_low ; parent$Dam_low
+
+# Create mating plan for next generation
+crossPlan <- matingPLAN(parent = parent)
+
+# Generate new generation
+Pop <- nextPop(pop = Pop, crossPlan = crossPlan, nSon = 8, LS = TRUE)
