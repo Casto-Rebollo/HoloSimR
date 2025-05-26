@@ -20,10 +20,10 @@ SP = essentialSP(founder = founderG, nSnpChr = 10000, minSnpFreq = 0.05)
 founderPop = newPop(founderG)
 #founderPop@pheno
 
+gSP$s2 <- 0.5 #50% of VE. For real values of h2 (non-constant), the s2 is a proportion of the VE to avoid VG + VS + VE > 1
 #-------------------------------------------------------------------------
 ## Create Base population manually
 #-------------------------------------------------------------------------
-gSP$s2 <- 0.5 #50% of VE. For real values of h2 (non-constant), the s2 is a proportion of the VE to avoid VG + VS + VE > 1
 basePop <- simBasePop(model = "H")
 
 # Compute phenotype in a base population
@@ -41,6 +41,14 @@ crossPlan <- matingPLAN(parent = parent)
 # Generate first generation of selection
 Pop <- nextPop(pop = Pop, crossPlan = crossPlan)
 #hist(Pop$PopLow@gv)
+
+acquiredSp <- acquiredSpecies(pop = Pop$PopLow, sym = 1)
+
+#Creating microbiota matrix
+Poptmp <- makeM(pop = Pop$PopLow, sym = 1)
+
+#Simulation phenotype
+Pop <- makeP(pop = Poptmp, model = "H", sym = 1)
 
 #-------------------------------------------------------------------------
 ## Automatize all selection (Paper)

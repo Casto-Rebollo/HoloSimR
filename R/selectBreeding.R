@@ -103,6 +103,7 @@ selectBreeding <- function(pop, nDam = NULL, nSire = NULL, sym = 0,
   #Loop for select each breeding animals depending on the selection process
     for(value in selOrder){
         Poptmp <- pop[pop@sex=="F"]
+        Poptmp@misc <- pop@misc[pop@sex == "F"]
         select.Dam <- data.frame(Dam = character(nDam),
                                  father = character(nDam),
                                  mother = character(nDam),
@@ -231,7 +232,8 @@ selectBreeding <- function(pop, nDam = NULL, nSire = NULL, sym = 0,
 
       ## Selection breeding males
       select.m <- NULL
-      tmp.male <- pop[pop@sex=="M",]
+      tmp.male <- pop[pop@sex=="M"]
+      tmp.male@misc <- pop@misc[pop@sex == "M"]
 
       select.male <- data.frame(Male = character(nSire),
                  father = character(nSire),
