@@ -64,6 +64,9 @@ setFounderM <- function(globalSP = NULL){
       stop("You are not using a database. Number of species to simulate is required!!")
     }
   }
+
+  scale <- globalSP$scale
+
   if(!is.null(globalSP$dataM)){
     sp_limit <- round(mean(rowSums(data)))
   }else{
