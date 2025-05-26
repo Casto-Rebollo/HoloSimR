@@ -1,5 +1,8 @@
 ##Setting simulation parameters
-gSP <- GlobalSP$new(nPop = 100, nChr = 3, nQTLchr = 100, nyear = 100,nSire = 20, nDam = 500)
+gSP <- GlobalSP$new(nPop = 100, nChr = 3, nQTLchr = 100, 
+                    nyear = 10,nSire = 20, nDam = 500,
+                    selType = "Low")
+
 gSP$setTrait(meanP = 3.66, varP = 0.46, h2 = 0.16, m2 = 0.13)
 gSP$setSpecies(nSpEff = 25, varMH = 0.028, meanMH = 0.47)
 
@@ -20,3 +23,4 @@ basePop <- simBasePop(model = "H")
 
 # Compute phenotype in a base population
 Pop <- makeP(pop = basePop$Pop, model = "H", sym = 1)
+hist(Pop@pheno); range(Pop@pheno)

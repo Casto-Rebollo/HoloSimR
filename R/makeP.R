@@ -110,11 +110,11 @@ makeP <- function(pop, model, sym = 0,
   #Control biological limits
   if(!is.null(limTrait)){
     # Apply lower limit if not NA
-    if (!is.na(limit[1])) {
+    if (!is.na(limTrait[1])) {
       pop@pheno[pop@pheno < limTrait[1]] <- limTrait[1]
     }
     # Apply upper limit if not NA
-    if (!is.na(limit[2])) {
+    if (!is.na(limTrait[2])) {
       pop@pheno[pop@pheno > limTrait[2]] <- limTrait[2]
     }
   }
