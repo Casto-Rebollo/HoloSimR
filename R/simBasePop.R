@@ -90,9 +90,13 @@ simBasePop <- function(model, founderPop = NULL,
 
   SP = get("SP", envir = .GlobalEnv)
 
+  if(is.null(globalSP$nCross)){
+    gSP$nCross <<- floor(globalSP$nDam / globalSP$nSire)
+    globalSP$nCross <- floor(globalSP$nDam / globalSP$nSire)
+  }
   set.seed(rndSeed)
   Pop <- randCross(founderPop,
-                       nCrosses = globalSP$nDam,
+                       nCrosses = globalSP$nCross,
                        nProgeny = globalSP$nSon)
   if(progressBar == TRUE){
     writeLines("--> Base Population DONE")

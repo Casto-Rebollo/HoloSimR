@@ -22,5 +22,6 @@ gSP$s2 <- 0.5 #50% of VE. For real values of h2 (non-constant), the s2 is a prop
 basePop <- simBasePop(model = "H")
 
 # Compute phenotype in a base population
-Pop <- makeP(pop = basePop$Pop, model = "H", sym = 1)
+Pop <- makeP(pop = basePop$Pop, model = "H", sym = 1,
+            limitTrait = c(0, NA))
 hist(Pop@pheno); range(Pop@pheno)
