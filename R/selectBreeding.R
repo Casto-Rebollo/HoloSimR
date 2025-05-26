@@ -83,7 +83,10 @@ selectBreeding <- function(pop, nDam = NULL, nSire = NULL,
     selType <- globalSP$selType
   }
 
-
+  if(nInd(pop)<nDam){
+    stop("Number of individuals in the population is lower to the number of
+          females we have to select")
+  }
   ##Select breeding females
 
   selOrder <- switch(

@@ -144,7 +144,7 @@ makeM <- function(pop,sym = 0,
 
   set.seed(rndSeed)
   if(sym == 1){
-    mbiome_VE <- mvrnorm(nInd(pop),mu = rep(0, globalSP$nSpecies), Sigma = diag(c(varE_sym.sp)))
+    mbiome_VE <- mvrnorm(nInd(pop),mu = rep(0, globalSP$nSpecies), Sigma = diag(c(varE_sym)))
 
     mbiome_sym <- matrix((geno.biome + mbiome_VE),
                      nrow = nInd(pop), ncol = length(founderM$w),
