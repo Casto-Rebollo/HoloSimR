@@ -15,5 +15,8 @@ founderPop = newPop(founderG)
 founderPop@pheno
 
 ##Create Base population manually
-gSP$s2 <- 0.5 #50% of VE. For variable h2, the s2 is a proportion of the VE to avoid VG + VS + VE > 1
+gSP$s2 <- 0.5 #50% of VE. For real values of h2 (non-constant), the s2 is a proportion of the VE to avoid VG + VS + VE > 1
 basePop <- simBasePop(model = "H")
+
+# Compute phenotype in a base population
+Pop <- makeP(pop = basePop$Pop, model = "H", sym = 1)

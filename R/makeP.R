@@ -106,11 +106,17 @@ makeP <- function(pop, model, sym = 0,
     set.seed(rndSeed)
     pop@pheno[indx] <- round(globalSP$meanP + pop@gv[indx] + pop_mv[indx] + rnorm(length(indx),sd=sqrt(vE)),2)
   }
-
-
+  
+  #Control biological limits
   if(!is.null(limTrait)){
-    pop@pheno[pop@pheno > limTrait[2]] <- limTrait[2]
-    pop@pheno[pop@pheno < limTrait[1]] <- limTrait[1]
+    # Apply lower limit if not NA
+    if (!is.na(limit[1])) {
+      pop@pheno[pop@pheno < limTrait[1]] <- limTrait[1]
+    }
+    # Apply upper limit if not NA
+    if (!is.na(limit[2])) {
+      pop@pheno[pop@pheno > limTrait[2]] <- limTrait[2]
+    }
   }
 
   return(pop)
