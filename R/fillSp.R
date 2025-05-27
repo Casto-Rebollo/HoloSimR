@@ -46,11 +46,12 @@ fillSp <- function(pop, w = NULL,mbiome = NULL, sym = 0) {
 
 
   mbiome <- data.frame(mbiome)
+  scale_mbiome <- scale(mbiome, center = TRUE, scale = FALSE)
 
   if(sym==0){
     pop@misc <- lapply(1:nInd(pop), function(ind) {
       pop@misc[[ind]]$M <- mbiome[ind, ]
-      pop@misc[[ind]]$mv <- (as.matrix(mbiome[ind, ]) %*% w)
+      pop@misc[[ind]]$mv <- (as.matrix(scale_mbiome[ind, ]) %*% w)
      # pop@misc[[ind]]$M_sym <- NA
     #  pop@misc[[ind]]$mv_sym <- NA
       pop@misc[[ind]]
@@ -63,7 +64,7 @@ fillSp <- function(pop, w = NULL,mbiome = NULL, sym = 0) {
      # pop@misc[[ind]]$M <- pop@misc[[ind]]$M
     #  pop@misc[[ind]]$mv <- pop@misc[[ind]]$mv
       pop@misc[[ind]]$M_sym <- mbiome[ind, ]
-      pop@misc[[ind]]$mv_sym <- (as.matrix(mbiome[ind, ]) %*% w)
+      pop@misc[[ind]]$mv_sym <- (as.matrix(scale_mbiome[ind, ]) %*% w)
       pop@misc[[ind]]
     })
   }

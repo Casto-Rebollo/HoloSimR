@@ -167,8 +167,6 @@ makeM <- function(pop,sym = 0,
   }
   colnames(mbiome) <- founderM$Species
 
-
-
   pop <- fillSp(pop=pop, mbiome = mbiome, w = wScaled, sym = sym )
 
   #Center according to the base population.

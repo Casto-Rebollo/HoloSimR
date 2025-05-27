@@ -122,7 +122,7 @@ acquiredSpecies <- function(pop, parentPop = NULL,founderM = NULL, sym = NULL,
       index_EM <- sample(c(1:length(founderM$w)),
                          length(founderM$w) * globalSP$EM, prob = founderM$RA_EM)
 
-      EM_litter <- founderM$EM[index_EM]*globalSP$EM
+      EM_litter <- founderM$PM[index_EM]*globalSP$EM
 
       for(nson in nSon_index){
         acquiredSp[nson, index_PM] <- PM_litter

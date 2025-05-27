@@ -21,6 +21,8 @@ founderPop = newPop(founderG)
 #founderPop@pheno
 
 gSP$s2 <- 0.5 #50% of VE. For real values of h2 (non-constant), the s2 is a proportion of the VE to avoid VG + VS + VE > 1
+
+
 #-------------------------------------------------------------------------
 ## Create Base population manually
 #-------------------------------------------------------------------------
