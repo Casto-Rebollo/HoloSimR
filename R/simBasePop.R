@@ -258,7 +258,7 @@ simBasePop <- function(model, founderPop = NULL,
     #Avoid extreme values
     quantile_99 <- apply(mbiome_total, 2, quantile, probs = 0.99)
     # Step 2: Truncate values above the 99th percentile
-    mbiome <- sweep(mbiome_total, 2, quantile_99, FUN = pmin)
+    mbiome_total <- sweep(mbiome_total, 2, quantile_99, FUN = pmin)
 
     #mbiome_total <- sweep(mbiome_total, 2, founderM$PM, `+`)
 
