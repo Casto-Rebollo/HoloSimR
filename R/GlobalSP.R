@@ -173,7 +173,7 @@ GlobalSP <- R6Class(
     animal = "GENERIC",
     selType = "Divergent",
     nyear = NULL,
-    model = "NMH",
+    model = "H",
     nt = 1,
     nSim = 1,
 

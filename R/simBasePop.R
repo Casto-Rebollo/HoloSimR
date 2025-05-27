@@ -174,10 +174,11 @@ simBasePop <- function(model, founderPop = NULL,
   #mbiome <- sweep(mbiome, 2, founderM$PM, `+`)
   
   #Scale microbiota without symbiosis
-  mv.raw <- mbiome %*% founderM$w
+  scale_mbiome <- scale(mbiome, center = TRUE, scale = FALSE)
+  mv.raw <- scale_mbiome %*% founderM$w
   wScale0 <- as.vector(sqrt((globalSP$m2*globalSP$varP) / var(mv.raw))) * founderM$w
 
-  mv.base <- mean(mbiome %*% wScale0)
+  mv.base <- mean(scale_mbiome %*% wScale0)
 
   symbiosis <- 0
   pop <- fillSp(pop=Pop, w = wScale0, mbiome = mbiome, sym = symbiosis)
@@ -193,9 +194,6 @@ simBasePop <- function(model, founderPop = NULL,
     }
     
     if(!is.null(globalSP$MH.H)){
-       varI.sp <- varE.sp * globalSP$s2
-       varE_sym.sp <- varE.sp - varI.sp
-
        total <- varG.sp + varI.sp + varE_sym.sp
        if(total[1] > (founderM$SD[1]^2)[1]){
         print(total[1], (founderM$SD^2)[1])
@@ -204,11 +202,8 @@ simBasePop <- function(model, founderPop = NULL,
       
     }
 
-    if(!is.null(globalSP$MH.H)){
-      varI.sp <- varE.sp * globalSP$s2
-      varE_sym.sp <- varE.sp - varI.sp
-    }
-    
+    varI.sp <- varE.sp * globalSP$s2
+    varE_sym.sp <- varE.sp - varI.sp
 
     set.seed(rndSeed)
     mbiome_VE <- mvrnorm(nInd(pop),mu = rep(0, globalSP$nSpecies), Sigma = diag(c(varE_sym.sp)))
