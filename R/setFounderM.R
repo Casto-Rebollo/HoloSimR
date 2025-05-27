@@ -103,6 +103,9 @@ setFounderM <- function(globalSP = NULL){
     ###################################################################
     founderM$PM <- sample(founderM$EM) #Mean of species abundance in the parental microbiome
     founderM$SD <- round(sample(runif(globalSP$nSpecies, 0,2)) * founderM$PM,2) #Standard deviation of species abundance
+    
+    #Scaling mu for transform log(abundance) in real data scale
+    founderM$PM <- founderM$PM - (founderM$SD^2)/2
   
   }else{
     founderM$PM0 <- 1
@@ -117,6 +120,8 @@ setFounderM <- function(globalSP = NULL){
     log = apply(log(data), 2, sd),
     clr = apply(clr(data), 2, sd)
     )
+
+    founderM$PM <- founderM$PM - (founderM$SD^2)/2
   }
   
   #################################

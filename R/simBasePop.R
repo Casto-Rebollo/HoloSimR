@@ -139,9 +139,14 @@ simBasePop <- function(model, founderPop = NULL,
                       trait = 1,
                       chr = NULL,
                       simParam = SP)
-  geno <- geno - 1
 
-  geno <- scale(geno, center = TRUE, scale = FALSE)
+  # Step 1: Calculate allele frequencies (p) for each SNP
+  p <- colMeans(geno) / 2
+
+  # Step 2: Center the matrix by subtracting 2 * p
+  geno <- sweep(geno, 2, 2 * p)
+
+  #geno <- scale(geno, center = TRUE, scale = FALSE)
 
   #Scale the genetic effect on the microbiome abundance
   scaleGxM <- geno %*% as.matrix(beta)

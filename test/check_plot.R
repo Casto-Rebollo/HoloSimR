@@ -25,6 +25,31 @@ ggplot(df, aes(x = value, fill = type, color = type)) +
   theme_classic()
 ggsave("test/microbial_heritability.tiff",width = 10, height = 10, units = "cm",dpi=600)
 
+#Check serveral ditributions
+df <- data.frame(
+  value = c(data[,29], exp(microbiome[,29])),
+  type = factor(c(rep("Real", length(data[,29])), 
+                  rep("Simulated", length(microbiome[,29]))))
+)
+
+# Plot
+ggplot(df, aes(x = value, fill = type, color = type)) +
+  geom_density(alpha = 0.3, size = 0.75) +
+  labs(
+    title = names(data)[29],
+    x = "Value",
+    y = "Density",
+    fill = "Data Type",
+    color = "Data Type"
+  ) +
+  scale_color_manual(values = c("#8d1c1a","#00a7c7"))+
+  scale_fill_manual(values = c("#8d1c1a","#00a7c7"))+
+  scale_x_continuous(labels = function(x) round(x, 1)) +
+
+  theme_classic()
+ggsave("test/Ruminoccocus_sym.tiff",width = 10, height = 10, units = "cm",dpi=600)
+
+
 ##Checking population structure added
 cor1 <- as.matrix(founderMxM)
 colnames(mbiome_total) <- colnames(data)

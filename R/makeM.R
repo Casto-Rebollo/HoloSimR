@@ -137,10 +137,12 @@ makeM <- function(pop,sym = 0,
                       trait = 1,
                       chr = NULL,
                       simParam = SP)
-  geno <- geno - 1
-  geno <- scale(geno, center = TRUE, scale = FALSE)
+  
+  # Step 1: Calculate allele frequencies (p) for each SNP
+  p <- colMeans(geno) / 2
 
-  geno.biome <- geno %*% as.matrix(baseGxM.scaled)
+  # Step 2: Center the matrix by subtracting 2 * p
+  geno <- sweep(geno, 2, 2 * p)
 
   set.seed(rndSeed)
   if(sym == 1){

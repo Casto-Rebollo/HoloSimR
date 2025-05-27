@@ -10,7 +10,7 @@ gSP$setTrait(meanP = 3.66, varP = 0.46, h2 = 0.16, m2 = 0.13)
 gSP$setSpecies(nSpEff = 25, varMH = 0.028, meanMH = 0.47)
 
 gSP$model <- "H"
-gSP$dataM <- "data/example.txt"
+gSP$dataM <- "test/example.txt"
 
 ##Founder population 
 founderG = setFounderG(globalSP=gSP)
