@@ -172,8 +172,8 @@ simBasePop <- function(model, founderPop = NULL,
   mbiome_VE <- mvrnorm(nInd(Pop),mu = rep(0, globalSP$nSpecies) ,Sigma = diag(c(varE.sp)))
   
   mbiome <- matrix((acquiredSp + geno.biome + mbiome_VE),
-                   nrow = nInd(Pop), ncol = length(founderM[["architecture"]]$w),
-                   dimnames = list(NULL, founderM[["architecture"]]$Species))
+                   nrow = nInd(Pop), ncol = length(founderM$w),
+                   dimnames = list(NULL, founderM$Species))
   
   #Avoid extreme values
   quantile_99 <- apply(mbiome, 2, quantile, probs = 0.99)
