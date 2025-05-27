@@ -162,10 +162,20 @@ makeM <- function(pop,sym = 0,
     mbiome <- matrix((acquiredSp + mbiome_sym + mbiome.sym),
                          nrow = nInd(pop), ncol = length(founderM$w),
                          dimnames = list(NULL, founderM$Species))
+
+        #Avoid extreme values
+    quantile_99 <- apply(mbiome, 2, quantile, probs = 0.99)
+    # Step 2: Truncate values above the 99th percentile
+    mbiome <- sweep(mbiome, 2, quantile_99, FUN = pmin)
   }else{
     mbiome_VE <- mvrnorm(nInd(pop),mu = rep(0, globalSP$nSpecies) ,Sigma = diag(c(varE)))
     mbiome <- matrix((acquiredSp + geno.biome + mbiome_VE),
                      nrow = nInd(pop), ncol = nrow(founderM))
+
+            #Avoid extreme values
+    quantile_99 <- apply(mbiome, 2, quantile, probs = 0.99)
+    # Step 2: Truncate values above the 99th percentile
+    mbiome <- sweep(mbiome, 2, quantile_99, FUN = pmin)
   }
   colnames(mbiome) <- founderM$Species
 
