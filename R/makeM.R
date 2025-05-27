@@ -173,11 +173,11 @@ makeM <- function(pop,sym = 0,
 
   if(sym == 1){
     pop_mv <- lapply(pop@misc, `[[`, "mv_sym")
-    pop_mv <- lapply(pop_mv, function(x) x - mv_base)
+    pop_mv <- lapply(pop_mv, function(x) x)
     pop@misc <- Map(function(x, y) {x$mv_sym <- y; x}, pop@misc, pop_mv)
   }else{
     pop_mv <- lapply(pop@misc, `[[`, "mv")
-    pop_mv <- lapply(pop_mv, function(x) x - mv_base)
+    pop_mv <- lapply(pop_mv, function(x) x)
     pop@misc <- Map(function(x, y) {x$mv <- y; x}, pop@misc, pop_mv)
   }
 

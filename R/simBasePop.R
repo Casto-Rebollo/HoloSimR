@@ -283,14 +283,14 @@ simBasePop <- function(model, founderPop = NULL,
 
   if(0%in%globalSP$symbiosis){
     pop_mv <- lapply(pop@misc, `[[`, "mv")
-    pop_mv <- lapply(pop_mv, function(x) x - mv.base)
+    pop_mv <- lapply(pop_mv, function(x) x)
     pop@misc <- Map(function(x, y) {x$mv <- y; x}, pop@misc, pop_mv)
 
   }
 
   if(1%in%globalSP$symbiosis){
     pop_mv <- lapply(pop@misc, `[[`, "mv_sym")
-    pop_mv <- lapply(pop_mv, function(x) x - mv.base_sym)
+    pop_mv <- lapply(pop_mv, function(x) x)
     pop@misc <- Map(function(x, y) {x$mv_sym <- y; x}, pop@misc, pop_mv)
   }
 
