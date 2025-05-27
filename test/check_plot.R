@@ -27,16 +27,16 @@ ggsave("test/microbial_heritability.tiff",width = 10, height = 10, units = "cm",
 
 #Check serveral ditributions
 df <- data.frame(
-  value = c(data[,37], exp(microbiome[,37])),
-  type = factor(c(rep("Real", length(data[,37])), 
-                  rep("Simulated", length(microbiome[,37]))))
+  value = c(data[,14], exp(microbiome[,14])),
+  type = factor(c(rep("Real", length(data[,14])), 
+                  rep("Simulated", length(microbiome[,14]))))
 )
 
 # Plot
 ggplot(df, aes(x = value, fill = type, color = type)) +
   geom_density(alpha = 0.3, size = 0.75) +
   labs(
-    title = names(data)[29],
+    title = names(data)[14],
     x = "Value",
     y = "Density",
     fill = "Data Type",
@@ -47,7 +47,7 @@ ggplot(df, aes(x = value, fill = type, color = type)) +
   scale_x_continuous(labels = function(x) round(x, 1)) +
 
   theme_classic()
-ggsave("test/Ruminoccocus_sym.tiff",width = 10, height = 10, units = "cm",dpi=600)
+ggsave("test/Prevotella_sym.tiff",width = 10, height = 10, units = "cm",dpi=600)
 
 
 ##Checking population structure added
@@ -114,7 +114,7 @@ pdf("All_species_density_plots_G+E+I.pdf", width = 8, height = 6)
 for (i in 1:ncol(data)) {
   
   df <- data.frame(
-    value = c(data[, i], exp(mbiome_total[, i])),
+    value = c(data[, i], exp(microbiome[, i])),
     type = factor(c(rep("Real", nrow(data)), rep("Simulated", nrow(mbiome_total))))
   )
   
@@ -127,8 +127,8 @@ for (i in 1:ncol(data)) {
       fill = "Data Type",
       color = "Data Type"
     ) +
-    scale_color_manual(values = c("#00a7c7","#8d1c1a")) +
-    scale_fill_manual(values = c("#00a7c7","#8d1c1a")) +
+    scale_color_manual(values = c("#8d1c1a","#00a7c7")) +
+    scale_fill_manual(values = c("#8d1c1a","#00a7c7")) +
     scale_x_continuous(labels = function(x) round(x, 1)) +
     theme_classic()
   
