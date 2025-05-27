@@ -194,6 +194,8 @@ simBasePop <- function(model, founderPop = NULL,
     }
     
     if(!is.null(globalSP$MH.H)){
+       varI.sp <- varE.sp * globalSP$s2
+       varE_sym.sp <- varE.sp - varI.sp
        total <- varG.sp + varI.sp + varE_sym.sp
        if(total[1] > (founderM$SD[1]^2)[1]){
         print(total[1], (founderM$SD^2)[1])
