@@ -132,6 +132,6 @@ acquiredSpecies <- function(pop, parentPop = NULL,founderM = NULL, sym = NULL,
 
   }
 
-  return(round(acquiredSp))
+  return(acquiredSp)
 
 }

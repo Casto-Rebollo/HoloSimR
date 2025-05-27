@@ -31,13 +31,13 @@ extractM <- function(pop, sym, globalSP = NULL, name = NULL, path = "./"){
   }
 
   if(sym == 1){
-    microbiome <- matrix(0,nrow = nInd(pop), ncol = length(globalSP$nSpecies))
+    microbiome <- matrix(0,nrow = nInd(pop), ncol = globalSP$nSpecies)
     for (ind in 1:nInd(pop)) {
       microbiome[ind,] <- unlist(pop@misc[[ind]]$M_sym)
     }
   }else{
     ##Saving microbiome
-    microbiome <- matrix(0,nrow = nInd(pop), ncol = length(globalSP$nSpecies))
+    microbiome <- matrix(0,nrow = nInd(pop), ncol = globalSP$nSpecies)
     for (ind in 1:nInd(pop)) {
       microbiome[ind,] <- unlist(pop@misc[[ind]]$M)
     }

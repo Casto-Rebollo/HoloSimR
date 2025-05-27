@@ -3,7 +3,7 @@
 #-------------------------------------------------------------------------
 
 ##Setting simulation parameters
-gSP <- GlobalSP$new(nPop = 100, nChr = 3, nQTLchr = 100, 
+gSP <- GlobalSP$new(nPop = 1000, nChr = 3, nQTLchr = 100, 
                     nyear = 10,nSire = 20, nDam = 500)
 
 gSP$setTrait(meanP = 3.66, varP = 0.46, h2 = 0.16, m2 = 0.13)
@@ -58,3 +58,11 @@ Pop <- makeP(pop = Poptmp, model = "H", sym = 1)
 # rm(list = ls())
 # After founderPop creation
 selection <- makeSelection(iter = 10, model = "H")
+
+#Example 2.
+gSP$EM <- 0
+gSP$PM <- 1
+
+#Rerun
+selection <- makeSelection(iter = 10, 
+                           sym = 1, model = c("G", "M","NMH","H"))
