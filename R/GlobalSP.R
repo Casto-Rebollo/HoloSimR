@@ -222,7 +222,7 @@ GlobalSP <- R6Class(
     #' All except the rabbit demographic histories are implemented in \pkg{\link{AlphaSimR}}.
     #' @param selType The selection type (e.g., \dQuote{Divergent}, \dQuote{Low}, \dQuote{High}).
     #' @param nyear The total number of years to simulate.
-    #' @param model The simulation model.
+    #' @param model The simulation model. \emph{Default} H model.
     #' There are five models implemented: \dQuote{G}, \dQuote{M}, \dQuote{NMH}, \dQuote{LMH}, \dQuote{MHM}, and \dQuote{HMH}.
     #' @param nt If OpenMP is available, this allows for simulating chromosomes in parallel. \emph{Default} is 1.
     #' @param nSim The number of repetitions of the simulation. \emph{Default} is 1.
@@ -233,7 +233,7 @@ GlobalSP <- R6Class(
     #' @param scale Transformation to perform in the data. \emph{Default} log() is taken.
     initialize = function(nPop, dataM = NULL, nChr = 1, nQTLchr, segSITESchr = NULL,
                           animal = "GENERIC", nSire = 25, nDam = 125,
-                          nCross = NULL, selType = "Divergent", nyear, model = "NMH", nt = 1, nSim = 1,
+                          nCross = NULL, selType = "Divergent", nyear, model = "H", nt = 1, nSim = 1,
                           scale = "log"){
       self$nPop <- nPop
       self$dataM <- dataM
