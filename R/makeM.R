@@ -143,7 +143,8 @@ makeM <- function(pop,sym = 0,
 
   # Step 2: Center the matrix by subtracting 2 * p
   geno <- sweep(geno, 2, 2 * p)
-
+  geno.biome <- geno %*% as.matrix(baseGxM.scaled)
+  
   set.seed(rndSeed)
   if(sym == 1){
     mbiome_VE <- mvrnorm(nInd(pop),mu = rep(0, globalSP$nSpecies), Sigma = diag(c(varE_sym)))
