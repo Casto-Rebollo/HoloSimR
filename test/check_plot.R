@@ -27,9 +27,9 @@ ggsave("test/microbial_heritability.tiff",width = 10, height = 10, units = "cm",
 
 #Check serveral ditributions
 df <- data.frame(
-  value = c(data[,29], exp(microbiome[,29])),
-  type = factor(c(rep("Real", length(data[,29])), 
-                  rep("Simulated", length(microbiome[,29]))))
+  value = c(data[,37], exp(microbiome[,37])),
+  type = factor(c(rep("Real", length(data[,37])), 
+                  rep("Simulated", length(microbiome[,37]))))
 )
 
 # Plot
