@@ -30,6 +30,8 @@ fillSp <- function(pop, w = NULL,mbiome = NULL, sym = 0) {
 
       }
     }
+    scale_mbiome <- sweep(mbiome, 2, mean_base, "-")
+
   }else{
     if(is.null(mbiome)){
       mbiome = get("mbiome", envir = parent.frame())
@@ -50,8 +52,6 @@ fillSp <- function(pop, w = NULL,mbiome = NULL, sym = 0) {
   mbiome <- data.frame(mbiome)
   
   if(sym==0){
-    
-    scale_mbiome <- sweep(mbiome, 2, mean_base, "-")
 
     pop@misc <- lapply(1:nInd(pop), function(ind) {
       pop@misc[[ind]]$M <- mbiome[ind, ]
@@ -63,8 +63,6 @@ fillSp <- function(pop, w = NULL,mbiome = NULL, sym = 0) {
   }
 
   if(sym == 1){
-
-    scale_mbiome <- sweep(mbiome, 2, mean_base, "-")
 
     pop@misc <- lapply(1:nInd(pop), function(ind) {
      # pop@misc[[ind]]$M <- pop@misc[[ind]]$M
