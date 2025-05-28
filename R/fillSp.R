@@ -22,13 +22,14 @@ fillSp <- function(pop, w = NULL,mbiome = NULL, sym = 0) {
     if(is.null(w)){
       if(sym == 1){
         w = basePop[["w_scale1"]]
-        mean_base = basePop[["mean_base_sym"]]
-
       }else{
         w = basePop[["w_scale0"]]
-        mean_base = basePop[["mean_base"]]
-
       }
+    }
+    if(sym==1){
+      mean_base = basePop[["mean_base_sym"]]
+    }else{
+      mean_base = basePop[["mean_base"]]
     }
 
   }else{
@@ -42,7 +43,6 @@ fillSp <- function(pop, w = NULL,mbiome = NULL, sym = 0) {
 
       }else{
         mean_base = get("mean_base", envir = parent.frame())
-
       }
   }
 
