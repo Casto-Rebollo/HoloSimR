@@ -129,8 +129,8 @@ simBasePop <- function(model, founderPop = NULL,
     H = globalSP$MH.H
   )
 
-  varG.sp <- (founderM[["architecture"]]$SD^2) * h
-  varE.sp <- (founderM[["architecture"]]$SD^2) - varG.sp
+  varG.sp <- (founderM$SD^2) * h
+  varE.sp <- (founderM$SD^2) - varG.sp
 
   set.seed(rndSeed)
 
@@ -172,8 +172,8 @@ simBasePop <- function(model, founderPop = NULL,
   mbiome_VE <- mvrnorm(nInd(Pop),mu = rep(0, globalSP$nSpecies) ,Sigma = diag(c(varE.sp)))
   
   mbiome <- matrix((acquiredSp + geno.biome + mbiome_VE),
-                   nrow = nInd(Pop), ncol = length(founderM[["architecture"]]$w),
-                   dimnames = list(NULL, founderM[["architecture"]]$Species))
+                   nrow = nInd(Pop), ncol = length(founderM$w),
+                   dimnames = list(NULL, founderM$Species))
   
   #Avoid extreme values
   quantile_99 <- apply(mbiome, 2, quantile, probs = 0.99)
@@ -186,8 +186,8 @@ simBasePop <- function(model, founderPop = NULL,
   scale_mbiome <- scale(mbiome, center = TRUE, scale = FALSE)
   mean_base <- attr(scale(mbiome, center = TRUE, scale = FALSE), "scaled:center")
   
-  mv.raw <- scale_mbiome %*% founderM[["architecture"]]$w
-  wScale0 <- as.vector(sqrt((globalSP$m2*globalSP$varP) / var(mv.raw))) * founderM[["architecture"]]$w
+  mv.raw <- scale_mbiome %*% founderM$w
+  wScale0 <- as.vector(sqrt((globalSP$m2*globalSP$varP) / var(mv.raw))) * founderM$w
 
   mv.base <- mean(scale_mbiome %*% wScale0)
 
@@ -222,8 +222,8 @@ simBasePop <- function(model, founderPop = NULL,
     mbiome_VE <- mvrnorm(nInd(pop),mu = rep(0, globalSP$nSpecies), Sigma = diag(c(varE_sym.sp)))
 
     mbiome_sym <- matrix((geno.biome + mbiome_VE),
-                     nrow = nInd(pop), ncol = length(founderM[["architecture"]]$w),
-                     dimnames = list(NULL, founderM[["architecture"]]$Species))
+                     nrow = nInd(pop), ncol = length(founderM$w),
+                     dimnames = list(NULL, founderM$Species))
 
     # Implement multivariate gamma with copula
     gauss_cop <- normalCopula(param = P2p(founderMxM), 
@@ -254,8 +254,8 @@ simBasePop <- function(model, founderPop = NULL,
 
     #Scale microbiota with symbiosis
     mbiome_total <- matrix((acquiredSp + mbiome_sym + mbiome.sym),
-                         nrow = nInd(pop), ncol = length(founderM[["architecture"]]$w),
-                         dimnames = list(NULL, founderM[["architecture"]]$Species))
+                         nrow = nInd(pop), ncol = length(founderM$w),
+                         dimnames = list(NULL, founderM$Species))
 
     #Avoid extreme values
     quantile_99 <- apply(mbiome_total, 2, quantile, probs = 0.99)
@@ -267,8 +267,8 @@ simBasePop <- function(model, founderPop = NULL,
     scale_mbiome <- scale(mbiome_total, center = TRUE, scale = FALSE)
     mean_base_sym <- attr(scale(mbiome_total, center = TRUE, scale = FALSE), "scaled:center")
     
-    mv.raw <- scale_mbiome %*% founderM[["architecture"]]$w
-    wScale <- as.vector(sqrt((globalSP$m2*c(globalSP$varP)) / var(mv.raw))) * founderM[["architecture"]]$w
+    mv.raw <- scale_mbiome %*% founderM$w
+    wScale <- as.vector(sqrt((globalSP$m2*c(globalSP$varP)) / var(mv.raw))) * founderM$w
 
     mv.base_sym <- mean(scale_mbiome %*% wScale)
 
@@ -307,11 +307,7 @@ simBasePop <- function(model, founderPop = NULL,
     pop_mv <- lapply(pop_mv, function(x) x)
     pop@misc <- Map(function(x, y) {x$mv_sym <- y; x}, pop@misc, pop_mv)
   }
-x <-list("Pop" = pop,"Beta_scale" = baseGxM.scaled,"Symbiosis_scale" = baseMxM.scaled,
-              "varG" = varG.sp , "varS" = varI.sp, "varE" = varE.sp,"varE_sym" = varE_sym.sp,
-              "w_scale0"=wScale0,"w_scale1"=wScale,"mu_mv"=mv.base,"mu_mv_sym"=mv.base_sym,
-              "mean_base_sym"= mean_base_sym,
-              "mean_base" = mean_base)
+
 
   return(list("Pop" = pop,"Beta_scale" = baseGxM.scaled,"Symbiosis_scale" = baseMxM.scaled,
               "varG" = varG.sp , "varS" = varI.sp, "varE" = varE.sp,"varE_sym" = varE_sym.sp,
