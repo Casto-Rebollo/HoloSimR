@@ -103,10 +103,12 @@ makeM <- function(pop,sym = 0,
   if(sym == 1){
     wScaled <- base[["w_scale1"]]
     mv_base <- base[["mu_mv_sym"]]
+    mean_base <- base[["mean_base_sym"]]
 
   }else{
     wScaled <- base[["w_scale0"]]
     mv_base <- base[["mu_mv"]]
+    mean_base <- base[["mean_base"]]
 
   }
 
@@ -182,7 +184,7 @@ makeM <- function(pop,sym = 0,
   colnames(mbiome) <- founderM$Species
   mbiome[acquiredSp == 0] <- 0
 
-  pop <- fillSp(pop=pop, mbiome = mbiome, w = wScaled, sym = sym )
+  pop <- fillSp(pop=pop, mbiome = mbiome, w = wScaled, sym = sym, mean = mean_base)
 
   #Center according to the base population.
 

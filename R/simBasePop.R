@@ -192,7 +192,7 @@ simBasePop <- function(model, founderPop = NULL,
   mv.base <- mean(scale_mbiome %*% wScale0)
 
   symbiosis <- 0
-  pop <- fillSp(pop=Pop, w = wScale0, mbiome = mbiome, sym = symbiosis)
+  pop <- fillSp(pop=Pop, w = wScale0, mbiome = mbiome, sym = symbiosis, mean = mean_base)
 
   #Check for symbiosis effect
   if(1%in%globalSP$symbiosis){
@@ -273,7 +273,7 @@ simBasePop <- function(model, founderPop = NULL,
     mv.base_sym <- mean(scale_mbiome %*% wScale)
 
     symbiosis <- 1
-    pop <- fillSp(pop=pop, mbiome = mbiome_total, w = wScale, sym = symbiosis)
+    pop <- fillSp(pop=pop, mbiome = mbiome_total, w = wScale, sym = symbiosis, mean = mean_base_sym)
 
     if(progressBar == TRUE){
       writeLines("--> Scaled symbiosis matrix DONE")

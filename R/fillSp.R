@@ -7,12 +7,13 @@
 #' @param mbiome A microbiota abundance matrix generated using the function \code{\link{makeM}}. If \code{NULL}, \code{mbiome} will be extracted from the global environment.
 #' @param w A vector with the \eqn{\omega} effect scaled according to the base population.
 #' @param sym A value of 1 to consider the symbiosis effect on the microbiota. \emph{Default} is 0.
+#' @param mean Vector of microbiota mean abundance from base population
 #'
 #' @return An object of class \code{\link{Pop-class}} with updated microbiota information.
 #' @export
 #' @usage fillSp(pop, w = NULL, mbiome = NULL, sym = 0)
 #'
-fillSp <- function(pop, w = NULL,mbiome = NULL, sym = 0) {
+fillSp <- function(pop, w = NULL,mbiome = NULL, sym = 0, mean = NULL) {
 
 if (exists("basePop", envir = .GlobalEnv)) {
   basePop_env <- .GlobalEnv
@@ -40,14 +41,15 @@ if (!is.null(basePop_env)) {
       w <- basePop[["w_scale0"]]
     }
   }
-
-  if (sym == 1) {
-    mean_base <- basePop[["mean_base_sym"]]
-  } else {
-    mean_base <- basePop[["mean_base"]]
+  if(is.null(mean)){
+    if (sym == 1) {
+      mean_base <- basePop[["mean_base_sym"]]
+    } else {
+      mean_base <- basePop[["mean_base"]]
+    }
   }
 
-} else {
+  } else {
   # If basePop is not found, get from parent.frame()
   if (is.null(mbiome)) {
     mbiome <- get("mbiome", envir = parent.frame())
@@ -60,7 +62,7 @@ if (!is.null(basePop_env)) {
   }
 }
 
-  scale_mbiome <- sweep(mbiome, 2, mean_base, "-")
+  scale_mbiome <- sweep(mbiome, 2, mean, "-")
 
   if(identical(pop@misc,list())){
     pop@misc = vector(length = nInd(pop), mode = "list")
