@@ -30,15 +30,23 @@ fillSp <- function(pop, w = NULL,mbiome = NULL, sym = 0) {
 
       }
     }
-    scale_mbiome <- sweep(mbiome, 2, mean_base, "-")
 
   }else{
     if(is.null(mbiome)){
       mbiome = get("mbiome", envir = parent.frame())
-      mean_base = get(mean_base, envir = parent.frame())
+
+      if(sym == 1){
+        mean_base = get(mean_base_sym, envir = parent.frame())
+
+      }else{
+        mean_base = get(mean_base, envir = parent.frame())
+
+      }
+      
     }
-    scale_mbiome <- sweep(mbiome, 2, mean_base, "-")
   }
+
+  scale_mbiome <- sweep(mbiome, 2, mean_base, "-")
 
   if(identical(pop@misc,list())){
     pop@misc = vector(length = nInd(pop), mode = "list")
