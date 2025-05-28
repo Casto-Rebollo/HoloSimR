@@ -36,9 +36,9 @@ if (!is.null(basePop_env)) {
 
   if (is.null(w)) {
     if (sym == 1) {
-      w <- basePop[["w_scale1"]]
+      w <- matrix(basePop[["w_scale1"]], ncol=1)
     } else {
-      w <- basePop[["w_scale0"]]
+      w <- matrix(basePop[["w_scale0"]], ncol=1)
     }
   }
   if(is.null(mean)){
@@ -56,6 +56,7 @@ if (!is.null(basePop_env)) {
   }
 }
 
+  w <- matrix(w, ncol=1, )
   scale_mbiome <- sweep(mbiome, 2, mean, "-")
 
   if(identical(pop@misc,list())){
