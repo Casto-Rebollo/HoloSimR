@@ -35,7 +35,9 @@ fillSp <- function(pop, w = NULL,mbiome = NULL, sym = 0) {
   }else{
     if(is.null(mbiome)){
       mbiome = get("mbiome", envir = parent.frame())
+      mean_base = get(mean_base, envir = parent.frame())
     }
+    scale_mbiome <- sweep(mbiome, 2, mean_base, "-")
   }
 
   if(identical(pop@misc,list())){
