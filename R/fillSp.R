@@ -14,37 +14,51 @@
 #'
 fillSp <- function(pop, w = NULL,mbiome = NULL, sym = 0) {
 
-  if(exists("basePop")){
-    basePop <- get("basePop", envir = .GlobalEnv)
-    if(is.null(mbiome)){
-      mbiome = get("mbiome", envir = .GlobalEnv)
-    }
-    if(is.null(w)){
-      if(sym == 1){
-        w = basePop[["w_scale1"]]
-      }else{
-        w = basePop[["w_scale0"]]
-      }
-    }
-    if(sym==1){
-      mean_base = basePop[["mean_base_sym"]]
-    }else{
-      mean_base = basePop[["mean_base"]]
-    }
+if (exists("basePop", envir = .GlobalEnv)) {
+  basePop_env <- .GlobalEnv
+} else if (exists("basePop", envir = parent.frame())) {
+  basePop_env <- parent.frame()
+} else {
+  basePop_env <- NULL
+}
 
-  }else{
-    if(is.null(mbiome)){
-      mbiome = get("mbiome", envir = parent.frame())
-      
+if (!is.null(basePop_env)) {
+  basePop <- get("basePop", envir = basePop_env)
+
+  if (is.null(mbiome)) {
+    if (exists("mbiome", envir = basePop_env)) {
+      mbiome <- get("mbiome", envir = basePop_env)
+    } else {
+      stop("mbiome not found in basePop environment.")
     }
-
-    if(sym == 1){
-        mean_base = get("mean_base_sym", envir = parent.frame())
-
-      }else{
-        mean_base = get("mean_base", envir = parent.frame())
-      }
   }
+
+  if (is.null(w)) {
+    if (sym == 1) {
+      w <- basePop[["w_scale1"]]
+    } else {
+      w <- basePop[["w_scale0"]]
+    }
+  }
+
+  if (sym == 1) {
+    mean_base <- basePop[["mean_base_sym"]]
+  } else {
+    mean_base <- basePop[["mean_base"]]
+  }
+
+} else {
+  # If basePop is not found, get from parent.frame()
+  if (is.null(mbiome)) {
+    mbiome <- get("mbiome", envir = parent.frame())
+  }
+
+  if (sym == 1) {
+    mean_base <- get("mean_base_sym", envir = parent.frame())
+  } else {
+    mean_base <- get("mean_base", envir = parent.frame())
+  }
+}
 
   scale_mbiome <- sweep(mbiome, 2, mean_base, "-")
 
