@@ -184,6 +184,8 @@ simBasePop <- function(model, founderPop = NULL,
   
   #Scale microbiota without symbiosis
   scale_mbiome <- scale(mbiome, center = TRUE, scale = FALSE)
+  mean_base <- attr(scale(mbiome, center = TRUE, scale = FALSE), "scaled:center")
+  
   mv.raw <- scale_mbiome %*% founderM$w
   wScale0 <- as.vector(sqrt((globalSP$m2*globalSP$varP) / var(mv.raw))) * founderM$w
 
@@ -263,8 +265,9 @@ simBasePop <- function(model, founderPop = NULL,
     #mbiome_total <- sweep(mbiome_total, 2, founderM$PM, `+`)
 
     scale_mbiome <- scale(mbiome_total, center = TRUE, scale = FALSE)
+    mean_base_sym <- attr(scale(mbiome_total, center = TRUE, scale = FALSE), "scaled:center")
+    
     mv.raw <- scale_mbiome %*% founderM$w
-
     wScale <- as.vector(sqrt((globalSP$m2*c(globalSP$varP)) / var(mv.raw))) * founderM$w
 
     mv.base_sym <- mean(scale_mbiome %*% wScale)
@@ -307,5 +310,8 @@ simBasePop <- function(model, founderPop = NULL,
 
 
   return(list("Pop" = pop,"Beta_scale" = baseGxM.scaled,"Symbiosis_scale" = baseMxM.scaled,
-              "varG" = varG.sp , "varS" = varI.sp, "varE" = varE.sp,"varE_sym" = varE_sym.sp,"w_scale0"=wScale0,"w_scale1"=wScale,"mu_mv"=mv.base,"mu_mv_sym"=mv.base_sym))
+              "varG" = varG.sp , "varS" = varI.sp, "varE" = varE.sp,"varE_sym" = varE_sym.sp,
+              "w_scale0"=wScale0,"w_scale1"=wScale,"mu_mv"=mv.base,"mu_mv_sym"=mv.base_sym,
+              "mean_base_sym"= mean_base_sym,
+              "mean_base" = mean_base))
 }

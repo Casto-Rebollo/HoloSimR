@@ -163,8 +163,8 @@ makeM <- function(pop,sym = 0,
     mbiome <- matrix((acquiredSp + mbiome_sym + mbiome.sym),
                          nrow = nInd(pop), ncol = length(founderM$w),
                          dimnames = list(NULL, founderM$Species))
-
-        #Avoid extreme values
+    
+    #Avoid extreme values
     quantile_99 <- apply(mbiome, 2, quantile, probs = 0.99)
     # Step 2: Truncate values above the 99th percentile
     mbiome <- sweep(mbiome, 2, quantile_99, FUN = pmin)
@@ -179,6 +179,7 @@ makeM <- function(pop,sym = 0,
     mbiome <- sweep(mbiome, 2, quantile_99, FUN = pmin)
   }
   colnames(mbiome) <- founderM$Species
+  mbiome[acquiredSp == 0] <- 0
 
   pop <- fillSp(pop=pop, mbiome = mbiome, w = wScaled, sym = sym )
 

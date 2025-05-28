@@ -22,9 +22,11 @@ fillSp <- function(pop, w = NULL,mbiome = NULL, sym = 0) {
     if(is.null(w)){
       if(sym == 1){
         w = basePop[["w_scale1"]]
+        mean_base = basePop[["mean_base_sym"]]
 
       }else{
         w = basePop[["w_scale0"]]
+        mean_base = basePop[["mean_base"]]
 
       }
     }
@@ -46,9 +48,11 @@ fillSp <- function(pop, w = NULL,mbiome = NULL, sym = 0) {
 
 
   mbiome <- data.frame(mbiome)
-  scale_mbiome <- scale(mbiome, center = TRUE, scale = FALSE)
-
+  
   if(sym==0){
+    
+    scale_mbiome <- sweep(mbiome, 2, mean_base, "-")
+
     pop@misc <- lapply(1:nInd(pop), function(ind) {
       pop@misc[[ind]]$M <- mbiome[ind, ]
       pop@misc[[ind]]$mv <- (as.matrix(scale_mbiome[ind, ]) %*% w)
@@ -59,6 +63,8 @@ fillSp <- function(pop, w = NULL,mbiome = NULL, sym = 0) {
   }
 
   if(sym == 1){
+
+    scale_mbiome <- sweep(mbiome, 2, mean_base, "-")
 
     pop@misc <- lapply(1:nInd(pop), function(ind) {
      # pop@misc[[ind]]$M <- pop@misc[[ind]]$M
