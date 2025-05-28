@@ -38,10 +38,10 @@ fillSp <- function(pop, w = NULL,mbiome = NULL, sym = 0) {
     }
 
     if(sym == 1){
-        mean_base = get(mean_base_sym, envir = parent.frame())
+        mean_base = get("mean_base_sym", envir = parent.frame())
 
       }else{
-        mean_base = get(mean_base, envir = parent.frame())
+        mean_base = get("mean_base", envir = parent.frame())
 
       }
   }
