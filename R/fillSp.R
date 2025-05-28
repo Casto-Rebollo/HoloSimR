@@ -76,7 +76,7 @@ if (!is.null(basePop_env)) {
 
     pop@misc <- lapply(1:nInd(pop), function(ind) {
       pop@misc[[ind]]$M <- mbiome[ind, ]
-      pop@misc[[ind]]$mv <- (as.matrix(scale_mbiome[ind, ]) %*% w)
+      pop@misc[[ind]]$mv <- as.numeric(scale_mbiome[ind, , drop = FALSE] %*% w)
      # pop@misc[[ind]]$M_sym <- NA
     #  pop@misc[[ind]]$mv_sym <- NA
       pop@misc[[ind]]
@@ -89,7 +89,7 @@ if (!is.null(basePop_env)) {
      # pop@misc[[ind]]$M <- pop@misc[[ind]]$M
     #  pop@misc[[ind]]$mv <- pop@misc[[ind]]$mv
       pop@misc[[ind]]$M_sym <- mbiome[ind, ]
-      pop@misc[[ind]]$mv_sym <- (as.matrix(scale_mbiome[ind, ]) %*% w)
+      pop@misc[[ind]]$mv_sym <- as.numeric(scale_mbiome[ind, , drop = FALSE] %*% w)
       pop@misc[[ind]]
     })
   }
