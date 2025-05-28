@@ -43,9 +43,9 @@ if (!is.null(basePop_env)) {
   }
   if(is.null(mean)){
     if (sym == 1) {
-      mean_base <- basePop[["mean_base_sym"]]
+      mean <- basePop[["mean_base_sym"]]
     } else {
-      mean_base <- basePop[["mean_base"]]
+      mean <- basePop[["mean_base"]]
     }
   }
 
@@ -53,12 +53,6 @@ if (!is.null(basePop_env)) {
   # If basePop is not found, get from parent.frame()
   if (is.null(mbiome)) {
     mbiome <- get("mbiome", envir = parent.frame())
-  }
-
-  if (sym == 1) {
-    mean_base <- get("mean_base_sym", envir = parent.frame())
-  } else {
-    mean_base <- get("mean_base", envir = parent.frame())
   }
 }
 
