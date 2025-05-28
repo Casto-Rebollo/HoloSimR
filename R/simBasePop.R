@@ -312,6 +312,5 @@ simBasePop <- function(model, founderPop = NULL,
   return(list("Pop" = pop,"Beta_scale" = baseGxM.scaled,"Symbiosis_scale" = baseMxM.scaled,
               "varG" = varG.sp , "varS" = varI.sp, "varE" = varE.sp,"varE_sym" = varE_sym.sp,
               "w_scale0"=wScale0,"w_scale1"=wScale,"mu_mv"=mv.base,"mu_mv_sym"=mv.base_sym,
-              "mean_base_sym"= mean_base_sym,
-              "mean_base" = mean_base))
+              "mean_base_sym"= mean_base_sym, "mean_base" = mean_base))
 }
