@@ -22,9 +22,11 @@ selectBreeding(pop,
 
 \item{nSire}{number of males to select. If \code{NULL}, it will be set by \code{nSire} from \code{\link{GlobalSP}}. Default 25.}
 
+\item{sym}{for including selection considering symbiosis or not. \emph{Default} 0.}
+
 \item{selType}{Selection type (e.g., \dQuote{Divergent}, \dQuote{Low}, \dQuote{High}). If \code{NULL}, it will be obtained from the global environment}
 
-\item{selby}{type of selection; Phenotypic selection (\dQuote{phe}; Default) or Genomic selection (\dQuote{gv})}
+\item{selby}{type of selection; Phenotypic selection (\dQuote{phe}; Default), Genomic selection (\dQuote{gv}), Microbiota selection (\Quote{mv}) or both (\dQuote{gv_mv})}
 
 \item{sex}{indicate if the phenotype belongs exclusively to females ("F"). Default \dQuote{both}}
 

@@ -41,6 +41,9 @@ Coyte KZ, Rakoff-Nahoum S. Understanding competition and cooperation within the 
 \item{\code{nPop}}{(numeric)
 Number of individuals in the founder population.}
 
+\item{\code{dataM}}{(TXT file)
+Real microbiota data (count data). TXT file separated by tabulations. Indicate the complete path if the file is not in the working directory}
+
 \item{\code{nChr}}{(numeric)
 Total number of chromosomes to simulate using \code{runcMacs} from \code{\link{AlphaSimR}}.}
 
@@ -66,7 +69,7 @@ The rabbit demographic is implemented in this package following \cite{Carneiro e
 Selection type (e.g., \dQuote{Divergent}, \dQuote{Low}, \dQuote{High}).}
 
 \item{\code{model}}{(character)
-Simulation model. There are five models implemented:
+Simulation model. There are six models implemented:
 \itemize{
  \item \dQuote{G}: Effect of the genome only
  \item \dQuote{M}: Effect of microbiota only
@@ -74,6 +77,7 @@ Simulation model. There are five models implemented:
  \item \dQuote{LMH}: Hologenome considering Low Microbial Heritability
  \item \dQuote{MHM}: Hologenome considering Medium Microbial Heritability
  \item \dQuote{HMH}: Hologenome considering High Microbial Heritability
+ \item \dQuote{H}: Hologenome considering variability of Microbial heritability
 }
 All models can run simultaneously starting from the same base population if \dQuote{All} is specified.}
 
@@ -91,6 +95,10 @@ Number of crosses.}
 
 \item{\code{nSon}}{(numeric)
 Number of progeny per cross.}
+
+\item{\code{scale}}{(character)
+Type of transformation to perform in the data. \emph{Default} is log ()
+Centered-log ratio transformation is also allowed ("clr")}
 
 \item{\code{meanP}}{(numeric)
 Mean value for the simulated trait.}
@@ -143,6 +151,15 @@ Microbial heritability in the MHM scenario.}
 \item{\code{MH.high}}{(numeric)
 Microbial heritability in the HMH scenario.}
 
+\item{\code{MH.H}}{(numeric vector)
+Vector of variable microbial heritability}
+
+\item{\code{meanMH}}{(numeric)
+Mean of microbial heritability distribution}
+
+\item{\code{varMH}}{(numeric)
+Variance of microbial heritability}
+
 \item{\code{symbiosis}}{(numeric)
 Value or vector to specify whether to simulate (1) or not (0) the microbial species interaction or symbiosis effect on microbial abundance.
 There are five types of interactions simulated according to \cite{Coyte KZ and Rakoff-Nahoum S (2019)}: Commensalism, Mutualism, Ammensalism, Competition, and Exploitation/Pathogen.}
@@ -172,15 +189,20 @@ Saving this object as \var{gSP} will facilitate the functionality of the other f
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{GlobalSP$new(
   nPop,
+  dataM = NULL,
   nChr = 1,
   nQTLchr,
   segSITESchr = NULL,
   animal = "GENERIC",
+  nSire = 25,
+  nDam = 125,
+  nCross = NULL,
   selType = "Divergent",
   nyear,
-  model = "NMH",
+  model = "H",
   nt = 1,
-  nSim = 1
+  nSim = 1,
+  scale = "log"
 )}\if{html}{\out{</div>}}
 }
 
@@ -188,6 +210,8 @@ Saving this object as \var{gSP} will facilitate the functionality of the other f
 \if{html}{\out{<div class="arguments">}}
 \describe{
 \item{\code{nPop}}{The total number of individuals to simulate in the founder population.}
+
+\item{\code{dataM}}{Path to TXT file format of microbiota composition (count data).}
 
 \item{\code{nChr}}{The total number of chromosomes to simulate using \code{runcMacs} from \code{\link{AlphaSimR}}. \emph{Default} is 1.}
 
@@ -199,16 +223,26 @@ If it is \var{NULL}, all are retained.}
 \item{\code{animal}}{The species to simulate. Can be \dQuote{GENERIC}, \dQuote{CATTLE}, or \dQuote{RABBIT}.
 All except the rabbit demographic histories are implemented in \pkg{\link{AlphaSimR}}.}
 
+\item{\code{nSire}}{Number of breeding sires. \emph{Default} is 25.}
+
+\item{\code{nDam}}{Number of breeding dam. \emph{Default} is 125.}
+
+\item{\code{nCross}}{Number of crosses per sire. \emph{Default} in \var{NULL}. If it is \var{NULL}, it will directly computed.}
+
 \item{\code{selType}}{The selection type (e.g., \dQuote{Divergent}, \dQuote{Low}, \dQuote{High}).}
 
 \item{\code{nyear}}{The total number of years to simulate.}
 
-\item{\code{model}}{The simulation model.
+\item{\code{model}}{The simulation model. \emph{Default} H model.
 There are five models implemented: \dQuote{G}, \dQuote{M}, \dQuote{NMH}, \dQuote{LMH}, \dQuote{MHM}, and \dQuote{HMH}.}
 
 \item{\code{nt}}{If OpenMP is available, this allows for simulating chromosomes in parallel. \emph{Default} is 1.}
 
 \item{\code{nSim}}{The number of repetitions of the simulation. \emph{Default} is 1.}
+
+\item{\code{scale}}{Transformation to perform in the data. \emph{Default} log() is taken.}
+
+\item{\code{nSon}}{Number of progeny per cross. \emph{Default} is 8.}
 }
 \if{html}{\out{</div>}}
 }
@@ -243,8 +277,8 @@ Function to set trait parameters for the GlobalSP object.
 Function to set species parameters for the GlobalSP object.
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{GlobalSP$setSpecies(
-  nSpecies,
-  nSp0,
+  nSpecies = NULL,
+  nSp0 = NULL,
   nSpEff,
   PM = 0.5,
   EM = 0.5,
@@ -257,16 +291,19 @@ Function to set species parameters for the GlobalSP object.
   MH.M = 0.2,
   MH.low = 0.1,
   MH.medium = 0.3,
-  MH.high = 0.6
+  MH.high = 0.6,
+  MH.H = NULL,
+  meanMH = NULL,
+  varMH = NULL
 )}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{nSpecies}}{Total number of microbial species in the community.}
+\item{\code{nSpecies}}{Total number of microbial species in the community. \emph{Default} is NULL}
 
-\item{\code{nSp0}}{Number of initial microbial species.}
+\item{\code{nSp0}}{Number of initial microbial species. \emph{Default} is NULL}
 
 \item{\code{nSpEff}}{Number of effective microbial species affecting the trait.}
 
@@ -293,6 +330,12 @@ Function to set species parameters for the GlobalSP object.
 \item{\code{MH.medium}}{Microbial heritability in the MHM scenario.}
 
 \item{\code{MH.high}}{Microbial heritability in the HMH scenario.}
+
+\item{\code{MH.H}}{Vector of microbial heritability in H scenario.}
+
+\item{\code{meanMH}}{Mean of microbial heritability in H scenario.}
+
+\item{\code{varM}}{Variance of microbial heritability in H scenario.}
 }
 \if{html}{\out{</div>}}
 }

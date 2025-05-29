@@ -14,6 +14,8 @@ fillSp(pop, w = NULL, mbiome = NULL, sym = 0)
 \item{mbiome}{A microbiota abundance matrix generated using the function \code{\link{makeM}}. If \code{NULL}, \code{mbiome} will be extracted from the global environment.}
 
 \item{sym}{A value of 1 to consider the symbiosis effect on the microbiota. \emph{Default} is 0.}
+
+\item{mean}{Vector of microbiota mean abundance from base population}
 }
 \value{
 An object of class \code{\link{Pop-class}} with updated microbiota information.

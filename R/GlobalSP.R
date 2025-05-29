@@ -286,7 +286,7 @@ GlobalSP <- R6Class(
     #' @param MH.high Microbial heritability in the HMH scenario.
     #' @param MH.H Vector of microbial heritability in H scenario.
     #' @param meanMH Mean of microbial heritability in H scenario.
-    #' @param varM Variance of microbial heritability in H scenario.
+    #' @param varMH Variance of microbial heritability in H scenario.
     setSpecies = function(nSpecies = NULL, nSp0 = NULL, nSpEff, PM = 0.5, EM = 0.5, propMH = 0.1,
                           propQTL = 0.1, propMH.wSp = 0.5, symbiosis = c(0, 1),
                           s2 = 0.2, MH.G = 0.2, MH.M = 0.2,
