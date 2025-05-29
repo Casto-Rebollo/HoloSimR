@@ -29,7 +29,8 @@ a list including three dataframes:\enumerate{
 Generation of the architecture for the parental and environmental microbiota at founder population. The \pkg{\link{mobsim}} package is used to help simulate the species abundance distribution. Saving it as \code{founderM} will facilitate access by other functions.
 }
 \details{
-
+The simulation of \eqn{\beta} and \eqn{\omega} is based on \cite{Perez-Enciso et al. (2021)}.
+\eqn{\beta} is the genetic effect of the QTLs on the species abundance, which follows a gamma distribution \eqn{\Gamma(shape = 0.2, scale=5)} as suggested in \cite{Caballero et al. (2015)}. \eqn{\omega} is the effect of the species abundance on the phenotype which follows a gamma distribution \eqn{\Gamma(shape = 1.4, scale=3.8)} (\cite{Pérez-Enciso et al., 2021}). The hyperparameters of this distribution consider that few microbial species have an effect on the phenotype (\cite{Duvallet et al., 2017}; \cite{Casto-Rebollo et al., 2023}).
 }
 \examples{
 

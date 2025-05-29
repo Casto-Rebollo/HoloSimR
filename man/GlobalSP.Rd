@@ -335,7 +335,7 @@ Function to set species parameters for the GlobalSP object.
 
 \item{\code{meanMH}}{Mean of microbial heritability in H scenario.}
 
-\item{\code{varM}}{Variance of microbial heritability in H scenario.}
+\item{\code{varMH}}{Variance of microbial heritability in H scenario.}
 }
 \if{html}{\out{</div>}}
 }
