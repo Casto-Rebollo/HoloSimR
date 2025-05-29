@@ -22,6 +22,9 @@ founderPop = newPop(founderG)
 
 gSP$s2 <- 0.5 #50% of VE. For real values of h2 (non-constant), the s2 is a proportion of the VE to avoid VG + VS + VE > 1
 
+#Rerun
+selection <- makeSelection(iter = 10, 
+                           sym = 1, model = c("G", "M","H"))
 
 #-------------------------------------------------------------------------
 ## Create Base population manually
@@ -65,4 +68,4 @@ gSP$PM <- 1
 
 #Rerun
 selection <- makeSelection(iter = 10, 
-                           sym = 1, model = c("G", "M","NMH","H"))
+                           sym = 1, model = c("G", "M","H"))
