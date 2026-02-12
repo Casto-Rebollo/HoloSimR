@@ -18,4 +18,4 @@ Instalation of HoloSimR:
 devtools::install_github("Casto-Rebollo/HoloSimR")
 ```
 ## Citation
-Cristina Casto-Rebollo, Ivan Pocrnic, Gregor Gorjanc, Noelia Ibáñez-Escriche. HoloSimR: a comprehensive framework for simulating breeding programs including the hologenome scenario, 08 November 2024, PREPRINT (Version 1) available at Research Square [DOI: 10.21203/rs.3.rs-5409986/v1](https://doi.org/10.21203/rs.3.rs-5409986/v1)
+Casto-Rebollo C, Pocrnic I, Gorjanc G, Ibáñez-Escriche N. HoloSimR: a comprehensive framework for simulating breeding programs including the hologenome scenario. J Anim Sci. 2026;104:skaf371. doi:10.1093/jas/skaf371 [DOI: 10.1093/jas/skaf371](https://doi.org/10.1093/jas/skaf371)
